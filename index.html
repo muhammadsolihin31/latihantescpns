@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tes CPNS Online</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#1e2433;--mut:#667085;--pri:#4f46e5;--pri2:#eef2ff;--ok:#16a34a;--bad:#dc2626;--warn:#d97706;--line:#e4e7ee;--r:14px}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+button,input,select,textarea{font:inherit}
+.top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.top .in{max-width:1100px;margin:auto;display:flex;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap}
+.brand{font-weight:800;color:var(--pri);font-size:18px;margin-right:8px}
+.nav{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.nav button{background:none;border:0;padding:8px 12px;border-radius:10px;cursor:pointer;color:var(--mut);font-weight:600}
+.nav button.on,.nav button:hover{background:var(--pri2);color:var(--pri)}
+.who{font-size:13px;color:var(--mut)}
+main{max-width:1100px;margin:auto;padding:20px 16px 60px}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:18px;margin:0 0 10px}
+.sub{color:var(--mut);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:16px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.stat .n{font-size:28px;font-weight:800}.stat .l{color:var(--mut);font-size:13px}
+.btn{background:var(--pri);color:#fff;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600}
+.btn:hover{filter:brightness(1.08)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.sec{background:#fff;color:var(--pri);border:1px solid var(--pri)}
+.btn.red{background:var(--bad)}.btn.sm{padding:5px 10px;font-size:13px}
+label{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
+input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}
+textarea{min-height:80px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f8f9fc;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+.tw{overflow-x:auto}
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:700;background:var(--pri2);color:var(--pri)}
+.badge.ok{background:#dcfce7;color:var(--ok)}.badge.bad{background:#fee2e2;color:var(--bad)}.badge.warn{background:#fef3c7;color:var(--warn)}
+.auth{max-width:400px;margin:40px auto}
+.tabs{display:flex;gap:6px;margin-bottom:8px}
+.tabs button{flex:1;padding:9px;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer;font-weight:600}
+.tabs button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.row>*{flex:1;min-width:140px}
+.qhead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.timer{font-weight:800;font-size:20px;font-variant-numeric:tabular-nums;color:var(--pri)}
+.timer.low{color:var(--bad)}
+.qbox{font-size:17px;margin:12px 0}
+.opt{display:flex;gap:10px;width:100%;text-align:left;padding:11px 13px;margin:8px 0;border:1.5px solid var(--line);background:#fff;border-radius:12px;cursor:pointer}
+.opt:hover{border-color:var(--pri)}
+.opt b{min-width:22px;color:var(--pri)}
+.opt.sel{border-color:var(--pri);background:var(--pri2)}
+.opt.right{border-color:var(--ok);background:#f0fdf4}.opt.wrong{border-color:var(--bad);background:#fef2f2}
+.nums{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.nums button{width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:600}
+.nums button.ans{background:#dbeafe;border-color:#93c5fd}
+.nums button.rg{background:#fef3c7;border-color:#fbbf24}
+.nums button.cur{outline:2px solid var(--pri)}
+.exp{background:#f8f9fc;border-left:4px solid var(--pri);padding:10px 12px;border-radius:8px;margin-top:10px;font-size:14px}
+.score{text-align:center;padding:14px}.score .n{font-size:34px;font-weight:800}
+details{border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0;background:#fff}
+summary{cursor:pointer;font-weight:600}
+dialog{border:0;border-radius:var(--r);padding:20px;max-width:640px;width:94%;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(15,20,40,.45)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e2433;color:#fff;padding:10px 18px;border-radius:10px;z-index:99;max-width:90%}
+.toast.err{background:var(--bad)}
+.me{background:#fffbeb}
+.mut{color:var(--mut);font-size:13px}
+.spin{text-align:center;padding:40px;color:var(--mut)}
+@media(max-width:600px){.who{display:none}}
+</style>
+</head>
+<body>
+<div class="top"><div class="in" id="topbar"></div></div>
+<main id="app"></main>
+<dialog id="dlg"></dialog>
+
+<script>
+/* ========= KONFIGURASI =========
+   Isi URL Web App dari Google Apps Script di sini (setelah deploy),
+   atau biarkan kosong lalu isi lewat halaman pengaturan awal. */
+const API_URL_DEFAULT = "";
+
+/* ========= UTIL ========= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let API = localStorage.getItem('API_URL') || API_URL_DEFAULT;
+let S = { token: localStorage.getItem('token') || '', user: JSON.parse(localStorage.getItem('user') || 'null'), view: '' };
+let timer = null;
+
+async function api(action, data) {
+  const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(Object.assign({ action, token: S.token }, data || {})) });
+  const j = await r.json();
+  if (!j.ok) {
+    if (j.error === 'AUTH') { logout(true); throw new Error('Sesi berakhir, silakan login lagi'); }
+    throw new Error(j.error);
+  }
+  return j.data;
+}
+function toast(msg, err) {
+  const t = document.createElement('div');
+  t.className = 'toast' + (err ? ' err' : '');
+  t.textContent = msg; document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+const loading = () => { $('#app').innerHTML = '<div class="spin">Memuat…</div>'; };
+const run = fn => async (...a) => { try { await fn(...a); } catch (e) { toast(e.message, true); } };
+function fmtDur(s) { s = Number(s) || 0; return Math.floor(s / 60) + 'm ' + (s % 60) + 's'; }
+function lulusBadge(l) { return l ? `<span class="badge ${l === 'LULUS' ? 'ok' : 'bad'}">${esc(l)}</span>` : '<span class="mut">-</span>'; }
+
+/* ========= NAV & LAYOUT ========= */
+const NAV = {
+  member: [['home', 'Beranda'], ['latihan', 'Latihan Soal'], ['tryout', 'Tryout SKD'], ['ranking', 'Ranking']],
+  admin: [['adminHome', 'Dashboard'], ['adminSoal', 'Bank Soal'], ['adminUser', 'Pengguna'], ['adminHasil', 'Hasil & Ranking'], ['adminSetting', 'Pengaturan']]
+};
+function drawTop() {
+  const tb = $('#topbar');
+  if (!S.user) { tb.innerHTML = '<span class="brand">🎓 Tes CPNS Online</span>'; return; }
+  tb.innerHTML = `<span class="brand">🎓 Tes CPNS</span><div class="nav">` +
+    NAV[S.user.role === 'admin' ? 'admin' : 'member'].map(n => `<button class="${S.view === n[0] ? 'on' : ''}" onclick="go('${n[0]}')">${n[1]}</button>`).join('') +
+    (S.user.role === 'admin' ? `<button class="${S.view === 'ranking' ? 'on' : ''}" onclick="go('ranking')">Ranking</button>` : '') +
+    `</div><span class="who">${esc(S.user.nama)} (${esc(S.user.role)})</span>
+    <button class="btn sm sec" onclick="vPassword()">Ganti Password</button>
+    <button class="btn sm sec" onclick="logout()">Keluar</button>`;
+}
+function go(v) {
+  if (timer && !confirm('Tes sedang berjalan. Keluar dari halaman ini akan membatalkan tes. Lanjutkan?')) return;
+  clearInterval(timer); timer = null; window.Q = null;
+  S.view = v; drawTop();
+  run(views[v])();
+}
+function logout(silent) {
+  clearInterval(timer); timer = null;
+  S.token = ''; S.user = null; localStorage.removeItem('token'); localStorage.removeItem('user');
+  S.view = ''; drawTop(); vAuth();
+  if (!silent) toast('Anda sudah keluar');
+}
+
+/* ========= AUTH ========= */
+function vSetup() {
+  $('#app').innerHTML = `<div class="card auth"><h2>Pengaturan Awal</h2>
+  <p class="sub">Tempel URL Web App Google Apps Script Anda (berakhiran <code>/exec</code>).</p>
+  <label>URL Web App</label><input id="su" placeholder="https://script.google.com/macros/s/.../exec">
+  <button class="btn" style="margin-top:14px;width:100%" onclick="saveSetup()">Simpan</button></div>`;
+}
+function saveSetup() {
+  const v = $('#su').value.trim();
+  if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(v)) return toast('URL tidak valid', true);
+  localStorage.setItem('API_URL', v); API = v; vAuth();
+}
+let authTab = 'login';
+function vAuth() {
+  drawTop();
+  if (!API) return vSetup();
+  $('#app').innerHTML = `<div class="card auth">
+  <div class="tabs"><button class="${authTab === 'login' ? 'on' : ''}" onclick="authTab='login';vAuth()">Masuk</button>
+  <button class="${authTab === 'reg' ? 'on' : ''}" onclick="authTab='reg';vAuth()">Daftar</button></div>
+  <form id="af">
+  ${authTab === 'reg' ? '<label>Nama lengkap</label><input id="a_nama" required>' : ''}
+  <label>Username</label><input id="a_u" required autocomplete="username">
+  <label>Password</label><input id="a_p" type="password" required autocomplete="current-password">
+  <button class="btn" style="margin-top:16px;width:100%" id="a_btn">${authTab === 'login' ? 'Masuk' : 'Daftar Akun Member'}</button></form>
+  <p class="mut" style="text-align:center;margin-top:14px"><a href="#" onclick="localStorage.removeItem('API_URL');API='';vSetup();return false">Ubah URL server</a></p></div>`;
+  $('#af').onsubmit = run(async e => {
+    e.preventDefault();
+    const b = $('#a_btn'); b.disabled = true;
+    try {
+      const d = { username: $('#a_u').value.trim(), password: $('#a_p').value };
+      if (authTab === 'reg') d.nama = $('#a_nama').value.trim();
+      const r = await api(authTab === 'login' ? 'login' : 'register', d);
+      S.token = r.token; S.user = r.user;
+      localStorage.setItem('token', r.token); localStorage.setItem('user', JSON.stringify(r.user));
+      go(r.user.role === 'admin' ? 'adminHome' : 'home');
+    } finally { b.disabled = false; }
+  });
+}
+function vPassword() {
+  dlg(`<h2>Ganti Password</h2><label>Password lama</label><input id="pl" type="password">
+  <label>Password baru (min. 6 karakter)</label><input id="pb" type="password">
+  <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end"><button class="btn sec" onclick="dlgClose()">Batal</button>
+  <button class="btn" onclick="run(async()=>{await api('gantiPassword',{lama:$('#pl').value,baru:$('#pb').value});dlgClose();toast('Password diganti')})()">Simpan</button></div>`);
+}
+function dlg(html) { $('#dlg').innerHTML = html; $('#dlg').showModal(); }
+function dlgClose() { $('#dlg').close(); }
+
+/* ========= MEMBER ========= */
+const views = {};
+views.home = async () => {
+  loading();
+  const [rw, rk] = await Promise.all([api('riwayat'), api('ranking')]);
+  const tryouts = rw.filter(r => r.mode === 'tryout');
+  const best = tryouts.reduce((m, r) => Math.max(m, r.total), 0);
+  const me = rk.find(r => r.saya);
+  $('#app').innerHTML = `<h1>Halo, ${esc(S.user.nama)} 👋</h1><p class="sub">Siap latihan SKD hari ini?</p>
+  <div class="grid g4">
+   <div class="card stat"><div class="n">${tryouts.length}</div><div class="l">Tryout dikerjakan</div></div>
+   <div class="card stat"><div class="n">${best || '-'}</div><div class="l">Skor tryout terbaik (maks 550)</div></div>
+   <div class="card stat"><div class="n">${me ? '#' + me.peringkat : '-'}</div><div class="l">Peringkat Anda dari ${rk.length} peserta</div></div>
+   <div class="card stat"><div class="n">${rw.length - tryouts.length}</div><div class="l">Sesi latihan</div></div>
+  </div>
+  <div class="row" style="margin-bottom:16px"><button class="btn" onclick="go('tryout')">Mulai Tryout SKD</button><button class="btn sec" onclick="go('latihan')">Latihan Soal</button></div>
+  <div class="card"><h2>Riwayat Tes</h2>${rw.length ? `<div class="tw"><table><tr><th>Waktu</th><th>Jenis</th><th>TWK</th><th>TIU</th><th>TKP</th><th>Total</th><th>Durasi</th><th>Status</th></tr>
+  ${rw.map(r => `<tr><td>${esc(r.waktu)}</td><td>${r.mode === 'tryout' ? 'Tryout SKD' : 'Latihan ' + esc(r.kategori)}</td><td>${r.TWK}</td><td>${r.TIU}</td><td>${r.TKP}</td><td><b>${r.total}</b></td><td>${fmtDur(r.durasi_detik)}</td><td>${lulusBadge(r.lulus)}</td></tr>`).join('')}</table></div>` : '<p class="mut">Belum ada riwayat.</p>'}</div>`;
+};
+
+views.latihan = async () => {
+  $('#app').innerHTML = `<h1>Latihan Soal</h1><p class="sub">Jawaban langsung dikoreksi disertai pembahasan.</p>
+  <div class="card"><div class="row">
+  <div><label>Kategori</label><select id="lk"><option value="TWK">TWK - Tes Wawasan Kebangsaan</option><option value="TIU">TIU - Tes Intelegensia Umum</option><option value="TKP">TKP - Tes Karakteristik Pribadi</option><option value="CAMPURAN">Campuran</option></select></div>
+  <div><label>Jumlah soal</label><select id="lj"><option>5</option><option selected>10</option><option>20</option><option>30</option></select></div>
+  <div><button class="btn" style="width:100%" onclick="mulaiLatihan()">Mulai Latihan</button></div></div></div>`;
+};
+window.mulaiLatihan = run(async () => {
+  const p = await api('getSoal', { mode: 'latihan', kategori: $('#lk').value, jumlah: $('#lj').value });
+  runQuiz(p);
+});
+
+views.tryout = async () => {
+  loading();
+  const c = await api('config');
+  $('#app').innerHTML = `<h1>Tryout SKD CPNS</h1><p class="sub">Simulasi Seleksi Kompetensi Dasar dengan penilaian otomatis dan masuk peringkat.</p>
+  <div class="card"><h2>Ketentuan</h2><ul>
+  <li>Waktu pengerjaan: <b>${c.durasi_menit} menit</b> (timer berjalan otomatis, tes dikumpulkan sendiri saat waktu habis).</li>
+  <li>Jumlah soal: TWK ${c.jumlah_twk}, TIU ${c.jumlah_tiu}, TKP ${c.jumlah_tkp} (sesuai ketersediaan bank soal).</li>
+  <li>Skor: TWK &amp; TIU benar = 5, salah/kosong = 0. TKP = 1 sampai 5 sesuai pilihan.</li>
+  <li>Passing grade: TWK ≥ ${c.pg_twk}, TIU ≥ ${c.pg_tiu}, TKP ≥ ${c.pg_tkp}.</li>
+  <li>Peringkat memakai <b>skor tryout terbaik</b>. Seri diurutkan dari TIU, TWK, lalu waktu tercepat.</li></ul>
+  <button class="btn" onclick="mulaiTryout()">Mulai Tryout Sekarang</button></div>`;
+};
+window.mulaiTryout = run(async () => {
+  if (!confirm('Mulai tryout sekarang? Timer langsung berjalan.')) return;
+  runQuiz(await api('getSoal', { mode: 'tryout' }));
+});
+
+/* ----- Quiz runner ----- */
+function runQuiz(p) {
+  clearInterval(timer);
+  window.Q = { sesi: p.sesi, mode: p.mode, soal: p.soal, i: 0, jawab: {}, ragu: {}, cek: {}, end: p.durasi ? Date.now() + p.durasi * 60000 : 0, busy: false };
+  if (Q.end) {
+    timer = setInterval(() => {
+      const left = Math.max(0, Q.end - Date.now());
+      const el = $('#tm');
+      if (el) {
+        const s = Math.floor(left / 1000);
+        el.textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+        el.classList.toggle('low', s < 300);
+      }
+      if (left <= 0) { clearInterval(timer); toast('Waktu habis! Jawaban dikumpulkan otomatis.'); finishQuiz(true); }
+    }, 500);
+  }
+  drawQuiz();
+}
+function drawQuiz() {
+  const s = Q.soal[Q.i], tryout = Q.mode === 'tryout', ck = Q.cek[s.id], pil = Q.jawab[s.id];
+  const opts = Object.keys(s.opsi).map(k => {
+    let cls = 'opt';
+    if (ck) { if (k === ck.kunci && s.kategori !== 'TKP') cls += ' right'; else if (k === pil && s.kategori !== 'TKP') cls += ' wrong'; if (s.kategori === 'TKP' && k === ck.kunci) cls += ' right'; else if (s.kategori === 'TKP' && k === pil) cls += ' sel'; }
+    else if (k === pil) cls += ' sel';
+    return `<button class="${cls}" onclick="pick('${k}')"><b>${k}.</b><span>${esc(s.opsi[k])}</span></button>`;
+  }).join('');
+  const nums = Q.soal.map((x, n) => `<button class="${Q.jawab[x.id] ? 'ans' : ''} ${Q.ragu[x.id] ? 'rg' : ''} ${n === Q.i ? 'cur' : ''}" onclick="jump(${n})">${n + 1}</button>`).join('');
+  $('#app').innerHTML = `<div class="card"><div class="qhead"><div><span class="badge">${esc(s.kategori)}</span> <b>Soal ${Q.i + 1}</b> dari ${Q.soal.length}</div>
+  ${tryout ? '<div class="timer" id="tm">--:--</div>' : '<span class="mut">Mode latihan</span>'}</div>
+  <div class="qbox">${esc(s.pertanyaan).replace(/\n/g, '<br>')}</div>${opts}
+  ${ck ? `<div class="exp"><b>${s.kategori === 'TKP' ? 'Skor pilihan Anda: ' + ck.skor + ' (jawaban terbaik: ' + esc(ck.kunci) + ')' : (ck.skor === 5 ? '✅ Benar!' : '❌ Salah. Kunci: ' + esc(ck.kunci))}</b>${ck.pembahasan ? '<br>' + esc(ck.pembahasan) : ''}</div>` : ''}
+  <div class="row" style="margin-top:16px"><button class="btn sec" onclick="jump(Q.i-1)" ${Q.i === 0 ? 'disabled' : ''}>← Sebelumnya</button>
+  ${tryout ? `<button class="btn sec" onclick="toggleRagu()">${Q.ragu[s.id] ? 'Batal ragu-ragu' : 'Tandai ragu-ragu'}</button>` : ''}
+  ${Q.i < Q.soal.length - 1 ? '<button class="btn" onclick="jump(Q.i+1)">Berikutnya →</button>' : '<button class="btn" onclick="finishQuiz()">Selesai &amp; Kumpulkan</button>'}</div></div>
+  <div class="card"><b>Navigasi soal</b><div class="nums">${nums}</div>
+  <p class="mut">Biru = terjawab${tryout ? ', kuning = ragu-ragu' : ''}.</p>
+  <button class="btn red sm" onclick="finishQuiz()">Kumpulkan sekarang</button></div>`;
+}
+window.jump = n => { if (n < 0 || n >= Q.soal.length) return; Q.i = n; drawQuiz(); };
+window.toggleRagu = () => { const id = Q.soal[Q.i].id; Q.ragu[id] = !Q.ragu[id]; drawQuiz(); };
+window.pick = run(async k => {
+  const s = Q.soal[Q.i];
+  if (Q.mode === 'latihan') {
+    if (Q.cek[s.id] || Q.busy) return;
+    Q.busy = true;
+    try {
+      Q.jawab[s.id] = k;
+      Q.cek[s.id] = await api('cek', { id: s.id, jawaban: k });
+    } finally { Q.busy = false; }
+  } else {
+    Q.jawab[s.id] = k;
+  }
+  drawQuiz();
+});
+window.finishQuiz = run(async auto => {
+  if (!window.Q) return;
+  const kosong = Q.soal.filter(s => !Q.jawab[s.id]).length;
+  if (!auto && !confirm(kosong ? `Masih ada ${kosong} soal belum dijawab. Kumpulkan sekarang?` : 'Kumpulkan jawaban sekarang?')) return;
+  clearInterval(timer); timer = null;
+  const q = Q; loading();
+  try {
+    const res = await api('submit', { sesi: q.sesi, jawaban: q.jawab });
+    window.Q = null;
+    showResult(res, q.soal);
+  } catch (e) { window.Q = q; drawQuiz(); throw e; }
+});
+function showResult(r, soal) {
+  const map = {}; soal.forEach(s => map[s.id] = s);
+  const tryout = r.mode === 'tryout';
+  const box = (k) => `<div class="card score"><div class="mut">${k}${tryout ? ' (min. ' + r.pg[k] + ')' : ''}</div><div class="n" style="color:${tryout ? (r[k] >= r.pg[k] ? 'var(--ok)' : 'var(--bad)') : 'var(--pri)'}">${r[k]}</div></div>`;
+  $('#app').innerHTML = `<h1>Hasil ${tryout ? 'Tryout SKD' : 'Latihan'}</h1>
+  <p class="sub">Durasi pengerjaan ${fmtDur(r.durasi)}${tryout ? ' · Status: ' + lulusBadge(r.lulus) : ''}</p>
+  <div class="grid g4">${tryout ? box('TWK') + box('TIU') + box('TKP') : ''}
+  <div class="card score"><div class="mut">Total skor</div><div class="n">${r.total}</div></div>
+  ${tryout ? '' : `<div class="card score"><div class="mut">Benar / jumlah</div><div class="n">${r.benar}/${r.jumlah}</div></div>`}</div>
+  <div class="row" style="margin-bottom:16px"><button class="btn" onclick="go('ranking')">Lihat Ranking</button><button class="btn sec" onclick="go('home')">Ke Beranda</button></div>
+  <div class="card"><h2>Pembahasan</h2>${r.review.map((v, n) => { const s = map[v.id]; if (!s) return '';
+    const ok = s.kategori === 'TKP' ? v.skor >= 4 : v.skor === 5;
+    return `<details><summary>${ok ? '✅' : '❌'} ${n + 1}. <span class="badge">${esc(s.kategori)}</span> ${esc(s.pertanyaan).slice(0, 90)}${s.pertanyaan.length > 90 ? '…' : ''}</summary>
+    <p>${esc(s.pertanyaan)}</p>${Object.keys(s.opsi).map(k => `<div>${k === v.kunci ? '✅' : (k === v.jawab ? '➖' : '•')} <b>${k}.</b> ${esc(s.opsi[k])}</div>`).join('')}
+    <div class="exp">Jawaban Anda: <b>${esc(v.jawab) || 'kosong'}</b> · Skor: <b>${v.skor}</b> · Terbaik/kunci: <b>${esc(v.kunci)}</b><br>${esc(v.pembahasan)}</div></details>`; }).join('')}</div>`;
+}
+
+views.ranking = async () => {
+  loading();
+  const rk = await api('ranking');
+  const admin = S.user.role === 'admin';
+  $('#app').innerHTML = `<h1>🏆 Peringkat Tryout SKD</h1><p class="sub">Diperbarui otomatis setiap ada yang menyelesaikan tryout. Memakai skor terbaik tiap peserta.</p>
+  <div class="card tw">${rk.length ? `<table><tr><th>#</th><th>Nama</th>${admin ? '<th>Username</th>' : ''}<th>TWK</th><th>TIU</th><th>TKP</th><th>Total</th><th>Status</th><th>Percobaan</th></tr>
+  ${rk.map(r => `<tr class="${r.saya ? 'me' : ''}"><td><b>${r.peringkat <= 3 ? ['🥇', '🥈', '🥉'][r.peringkat - 1] : r.peringkat}</b></td><td>${esc(r.nama)}${r.saya ? ' <span class="badge warn">Anda</span>' : ''}</td>${admin ? `<td>${esc(r.username)}</td>` : ''}<td>${r.TWK}</td><td>${r.TIU}</td><td>${r.TKP}</td><td><b>${r.total}</b></td><td>${lulusBadge(r.lulus)}</td><td>${r.percobaan}</td></tr>`).join('')}</table>` : '<p class="mut">Belum ada peserta yang menyelesaikan tryout.</p>'}</div>`;
+};
+
+/* ========= ADMIN ========= */
+views.adminHome = async () => {
+  loading();
+  const s = await api('stats');
+  $('#app').innerHTML = `<h1>Dashboard Admin</h1><p class="sub">Semua data tersimpan di Google Spreadsheet Anda.</p>
+  <div class="grid g4">
+  <div class="card stat"><div class="n">${s.totalSoal}</div><div class="l">Total soal (TWK ${s.soal.TWK} · TIU ${s.soal.TIU} · TKP ${s.soal.TKP})</div></div>
+  <div class="card stat"><div class="n">${s.member}</div><div class="l">Member terdaftar</div></div>
+  <div class="card stat"><div class="n">${s.tryout}</div><div class="l">Tryout selesai</div></div>
+  <div class="card stat"><div class="n">${s.latihan}</div><div class="l">Sesi latihan</div></div></div>
+  <div class="card"><h2>Google Spreadsheet</h2><p>Sheet <b>Users</b>, <b>Soal</b>, <b>Hasil</b>, <b>Ranking</b>, dan <b>Config</b> bisa dibuka dan diedit langsung. Sheet Ranking ikut diperbarui otomatis.</p>
+  <a class="btn" href="${esc(s.url)}" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Buka Spreadsheet ↗</a></div>`;
+};
+
+let ADM = { soal: [] };
+views.adminSoal = async () => {
+  loading();
+  ADM.soal = await api('listSoal');
+  $('#app').innerHTML = `<div class="qhead"><div><h1>Bank Soal</h1><p class="sub">Tambah, ubah, hapus, atau impor soal massal.</p></div>
+  <div style="display:flex;gap:8px"><button class="btn" onclick="formSoal()">+ Tambah Soal</button><button class="btn sec" onclick="formImport()">Impor Massal</button></div></div>
+  <div class="card"><div class="row"><div><label>Cari</label><input id="fq" oninput="tblSoal()" placeholder="kata kunci pertanyaan"></div>
+  <div><label>Kategori</label><select id="fk" onchange="tblSoal()"><option value="">Semua</option><option>TWK</option><option>TIU</option><option>TKP</option></select></div></div></div>
+  <div class="card tw" id="tbs"></div>`;
+  tblSoal();
+};
+window.tblSoal = () => {
+  const q = ($('#fq').value || '').toLowerCase(), k = $('#fk').value;
+  const L = ADM.soal.filter(s => (!k || s.kategori.toUpperCase() === k) && (!q || s.pertanyaan.toLowerCase().includes(q)));
+  $('#tbs').innerHTML = `<p class="mut">${L.length} soal</p><table><tr><th>Kat</th><th>Pertanyaan</th><th>Kunci</th><th></th></tr>` +
+    L.map(s => `<tr><td><span class="badge">${esc(s.kategori)}</span></td><td>${esc(s.pertanyaan).slice(0, 140)}</td><td>${s.kategori.toUpperCase() === 'TKP' ? 'skor' : esc(s.kunci)}</td>
+    <td style="white-space:nowrap"><button class="btn sm sec" onclick="formSoal('${s.id}')">Ubah</button> <button class="btn sm red" onclick="hapusSoal('${s.id}')">Hapus</button></td></tr>`).join('') + '</table>';
+};
+window.formSoal = id => {
+  const s = ADM.soal.find(x => x.id === id) || { kategori: 'TWK' };
+  const O = ['A', 'B', 'C', 'D', 'E'];
+  dlg(`<h2>${id ? 'Ubah' : 'Tambah'} Soal</h2>
+  <label>Kategori</label><select id="f_kat" onchange="togKat()"><option ${s.kategori === 'TWK' ? 'selected' : ''}>TWK</option><option ${s.kategori === 'TIU' ? 'selected' : ''}>TIU</option><option ${s.kategori === 'TKP' ? 'selected' : ''}>TKP</option></select>
+  <label>Pertanyaan</label><textarea id="f_q">${esc(s.pertanyaan || '')}</textarea>
+  ${O.map(k => `<div class="row"><div style="flex:4"><label>Opsi ${k}</label><input id="f_${k}" value="${esc(s[k] || '')}"></div>
+  <div class="skor" style="flex:1"><label>Skor ${k} (1-5)</label><input id="f_s${k}" type="number" min="1" max="5" value="${esc(s['skor' + k] || '')}"></div></div>`).join('')}
+  <div id="kunciBox"><label>Kunci jawaban</label><select id="f_kunci">${O.map(k => `<option ${String(s.kunci).toUpperCase() === k ? 'selected' : ''}>${k}</option>`).join('')}</select></div>
+  <label>Pembahasan</label><textarea id="f_p">${esc(s.pembahasan || '')}</textarea>
+  <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end"><button class="btn sec" onclick="dlgClose()">Batal</button>
+  <button class="btn" onclick="simpanSoal('${id || ''}')">Simpan</button></div>`);
+  togKat();
+};
+window.togKat = () => {
+  const tkp = $('#f_kat').value === 'TKP';
+  document.querySelectorAll('.skor').forEach(e => e.style.display = tkp ? '' : 'none');
+  $('#kunciBox').style.display = tkp ? 'none' : '';
+};
+window.simpanSoal = run(async id => {
+  const d = { id: id || '', kategori: $('#f_kat').value, pertanyaan: $('#f_q').value, kunci: $('#f_kunci').value, pembahasan: $('#f_p').value };
+  ['A', 'B', 'C', 'D', 'E'].forEach(k => { d[k] = $('#f_' + k).value; d['skor' + k] = $('#f_s' + k).value; });
+  await api('simpanSoal', d); dlgClose(); toast('Soal disimpan'); views.adminSoal();
+});
+window.hapusSoal = run(async id => { if (!confirm('Hapus soal ini?')) return; await api('hapusSoal', { id }); toast('Soal dihapus'); views.adminSoal(); });
+window.formImport = () => dlg(`<h2>Impor Soal Massal</h2>
+  <p class="mut">Salin dari Google Sheets lalu tempel di bawah. Urutan kolom (tanpa judul kolom juga boleh):<br>
+  <code>kategori, pertanyaan, A, B, C, D, E, kunci, skorA, skorB, skorC, skorD, skorE, pembahasan</code><br>
+  TWK/TIU isi kolom kunci. TKP isi skor 1-5 tiap opsi dan kosongkan kunci.</p>
+  <textarea id="imp" style="min-height:200px" placeholder="Tempel di sini..."></textarea>
+  <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end"><button class="btn sec" onclick="dlgClose()">Batal</button><button class="btn" onclick="doImport()">Impor</button></div>`);
+window.doImport = run(async () => {
+  const keys = ['kategori', 'pertanyaan', 'A', 'B', 'C', 'D', 'E', 'kunci', 'skorA', 'skorB', 'skorC', 'skorD', 'skorE', 'pembahasan'];
+  const lines = $('#imp').value.split(/\r?\n/).filter(l => l.trim());
+  const items = lines.map(l => l.split('\t')).filter(c => c[0].trim().toLowerCase() !== 'kategori')
+    .map(c => { const o = {}; keys.forEach((k, i) => o[k] = (c[i] || '').trim()); return o; });
+  if (!items.length) return toast('Tidak ada data', true);
+  const r = await api('importSoal', { items });
+  dlgClose();
+  toast(`${r.berhasil} soal diimpor` + (r.errors.length ? `, ${r.errors.length} gagal` : ''), r.errors.length > 0);
+  if (r.errors.length) alert('Baris gagal:\n' + r.errors.slice(0, 15).join('\n'));
+  views.adminSoal();
+});
+
+views.adminUser = async () => {
+  loading();
+  const L = await api('listUser');
+  window.USERS = L;
+  $('#app').innerHTML = `<div class="qhead"><div><h1>Pengguna</h1><p class="sub">Kelola akun admin dan member.</p></div><button class="btn" onclick="formUser()">+ Tambah Pengguna</button></div>
+  <div class="card tw"><table><tr><th>Username</th><th>Nama</th><th>Role</th><th>Dibuat</th><th></th></tr>
+  ${L.map(u => `<tr><td>${esc(u.username)}</td><td>${esc(u.nama)}</td><td><span class="badge ${u.role === 'admin' ? 'warn' : ''}">${esc(u.role)}</span></td><td>${esc(u.dibuat)}</td>
+  <td style="white-space:nowrap"><button class="btn sm sec" onclick="formUser('${esc(u.username)}')">Ubah</button> <button class="btn sm red" onclick="hapusUser('${esc(u.username)}')">Hapus</button></td></tr>`).join('')}</table></div>`;
+};
+window.formUser = un => {
+  const u = (window.USERS || []).find(x => x.username === un) || { role: 'member' };
+  dlg(`<h2>${un ? 'Ubah' : 'Tambah'} Pengguna</h2>
+  <label>Username</label><input id="u_u" value="${esc(u.username || '')}" ${un ? 'disabled' : ''}>
+  <label>Nama</label><input id="u_n" value="${esc(u.nama || '')}">
+  <label>Role</label><select id="u_r"><option value="member" ${u.role === 'member' ? 'selected' : ''}>member</option><option value="admin" ${u.role === 'admin' ? 'selected' : ''}>admin</option></select>
+  <label>${un ? 'Password baru (kosongkan jika tidak diubah)' : 'Password (min. 6 karakter)'}</label><input id="u_p" type="password">
+  <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end"><button class="btn sec" onclick="dlgClose()">Batal</button>
+  <button class="btn" onclick="simpanUser(${un ? 'false' : 'true'})">Simpan</button></div>`);
+};
+window.simpanUser = run(async baru => {
+  await api('simpanUser', { baru, username: $('#u_u').value.trim(), nama: $('#u_n').value.trim(), role: $('#u_r').value, password: $('#u_p').value });
+  dlgClose(); toast('Pengguna disimpan'); views.adminUser();
+});
+window.hapusUser = run(async un => { if (!confirm('Hapus pengguna ' + un + '?')) return; await api('hapusUser', { username: un }); toast('Dihapus'); views.adminUser(); });
+
+views.adminHasil = async () => {
+  loading();
+  const L = await api('listHasil');
+  $('#app').innerHTML = `<div class="qhead"><div><h1>Hasil Tes</h1><p class="sub">Seluruh riwayat tryout dan latihan peserta.</p></div>
+  <div style="display:flex;gap:8px"><button class="btn sec" onclick="go('ranking')">Lihat Ranking</button><button class="btn" onclick="rebuild()">Perbarui Sheet Ranking</button></div></div>
+  <div class="card tw"><table><tr><th>Waktu</th><th>Nama</th><th>Jenis</th><th>TWK</th><th>TIU</th><th>TKP</th><th>Total</th><th>Durasi</th><th>Status</th></tr>
+  ${L.map(r => `<tr><td>${esc(r.waktu)}</td><td>${esc(r.nama)}<br><span class="mut">${esc(r.username)}</span></td><td>${r.mode === 'tryout' ? 'Tryout' : 'Latihan ' + esc(r.kategori)}</td><td>${r.TWK}</td><td>${r.TIU}</td><td>${r.TKP}</td><td><b>${r.total}</b></td><td>${fmtDur(r.durasi_detik)}</td><td>${lulusBadge(r.lulus)}</td></tr>`).join('') || '<tr><td colspan="9" class="mut">Belum ada data</td></tr>'}</table></div>`;
+};
+window.rebuild = run(async () => { const n = await api('rebuild'); toast(`Sheet Ranking diperbarui (${n} peserta)`); });
+
+views.adminSetting = async () => {
+  loading();
+  const c = await api('config');
+  const f = (k, l) => `<div><label>${l}</label><input id="c_${k}" type="number" value="${c[k]}"></div>`;
+  $('#app').innerHTML = `<h1>Pengaturan</h1><p class="sub">Sesuaikan durasi, jumlah soal, dan passing grade dengan ketentuan terbaru.</p>
+  <div class="card"><div class="row">${f('durasi_menit', 'Durasi tryout (menit)')}${f('jumlah_twk', 'Jumlah soal TWK')}${f('jumlah_tiu', 'Jumlah soal TIU')}${f('jumlah_tkp', 'Jumlah soal TKP')}</div>
+  <div class="row">${f('pg_twk', 'Passing grade TWK')}${f('pg_tiu', 'Passing grade TIU')}${f('pg_tkp', 'Passing grade TKP')}
+  <div><label>Pendaftaran member</label><select id="c_reg"><option value="true" ${c.registrasi_terbuka ? 'selected' : ''}>Dibuka</option><option value="false" ${!c.registrasi_terbuka ? 'selected' : ''}>Ditutup</option></select></div></div>
+  <button class="btn" style="margin-top:16px" onclick="saveCfg()">Simpan Pengaturan</button></div>`;
+};
+window.saveCfg = run(async () => {
+  const d = {};
+  ['durasi_menit', 'jumlah_twk', 'jumlah_tiu', 'jumlah_tkp', 'pg_twk', 'pg_tiu', 'pg_tkp'].forEach(k => d[k] = Number($('#c_' + k).value));
+  d.registrasi_terbuka = $('#c_reg').value;
+  await api('setConfig', d); toast('Pengaturan disimpan');
+});
+
+/* ========= START ========= */
+window.addEventListener('beforeunload', e => { if (window.Q) { e.preventDefault(); e.returnValue = ''; } });
+(function init() {
+  if (S.token && S.user && API) { go(S.user.role === 'admin' ? 'adminHome' : 'home'); }
+  else vAuth();
+})();
+</script>
+</body>
+</html>
