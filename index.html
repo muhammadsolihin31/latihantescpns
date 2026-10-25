@@ -3,97 +3,271 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tes CPNS Online</title>
+<title>Simulasi SKD CPNS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f4f6fb;--card:#fff;--ink:#1e2433;--mut:#667085;--pri:#4f46e5;--pri2:#eef2ff;--ok:#16a34a;--bad:#dc2626;--warn:#d97706;--line:#e4e7ee;--r:14px}
+:root{
+  --navy:#12304f;--navy-2:#0b2038;--ink:#1b2430;--muted:#5b6776;--line:#d5dbe3;--line-2:#e6eaf0;
+  --canvas:#edf0f4;--paper:#fff;--blue:#1f6fd1;--blue-soft:#e7f0fc;--green:#2c9a58;--green-soft:#e2f4ea;
+  --amber:#f2a93b;--amber-soft:#fcf0da;--amber-ink:#8a5a07;--red:#c73a3a;--red-soft:#fbe7e7;
+  --r:6px;--sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
-button,input,select,textarea{font:inherit}
-.top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
-.top .in{max-width:1100px;margin:auto;display:flex;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap}
-.brand{font-weight:800;color:var(--pri);font-size:18px;margin-right:8px}
-.nav{display:flex;gap:4px;flex-wrap:wrap;flex:1}
-.nav button{background:none;border:0;padding:8px 12px;border-radius:10px;cursor:pointer;color:var(--mut);font-weight:600}
-.nav button.on,.nav button:hover{background:var(--pri2);color:var(--pri)}
-.who{font-size:13px;color:var(--mut)}
-main{max-width:1100px;margin:auto;padding:20px 16px 60px}
-h1{font-size:22px;margin:0 0 4px}h2{font-size:18px;margin:0 0 10px}
-.sub{color:var(--mut);margin:0 0 18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:16px}
-.grid{display:grid;gap:14px}
-.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-.g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-.stat .n{font-size:28px;font-weight:800}.stat .l{color:var(--mut);font-size:13px}
-.btn{background:var(--pri);color:#fff;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600}
-.btn:hover{filter:brightness(1.08)}.btn:disabled{opacity:.5;cursor:not-allowed}
-.btn.sec{background:#fff;color:var(--pri);border:1px solid var(--pri)}
-.btn.red{background:var(--bad)}.btn.sm{padding:5px 10px;font-size:13px}
-label{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
-input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}
-textarea{min-height:80px}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--canvas);line-height:1.5;font-size:15px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--blue)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+h1,h2,h3{margin:0;line-height:1.25;font-weight:600}
+h1{font-size:24px}h2{font-size:18px}h3{font-size:15px}
+p{margin:0 0 10px}
+.mut{color:var(--muted)}.sm{font-size:13px}.nowrap{white-space:nowrap}
+.hide{display:none!important}
+
+/* ---- topbar ---- */
+#top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:20}
+#top .in{max-width:1160px;margin:auto;display:flex;align-items:center;gap:20px;padding:0 16px;min-height:56px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px;color:#fff;text-decoration:none}
+.brand svg{width:28px;height:28px;flex:none}
+.nav{display:flex;gap:2px;flex:1;flex-wrap:wrap}
+.nav button{background:none;border:0;color:#c5d3e4;padding:17px 12px 15px;border-bottom:3px solid transparent;font-weight:500}
+.nav button:hover{color:#fff}
+.nav button.on{color:#fff;border-bottom-color:var(--amber)}
+.who{display:flex;align-items:center;gap:10px;font-size:13px;color:#c5d3e4}
+.who b{color:#fff;font-weight:500}
+.linkbtn{background:none;border:0;color:#c5d3e4;text-decoration:underline;padding:4px;font-size:13px}
+.linkbtn:hover{color:#fff}
+main{max-width:1160px;margin:0 auto;padding:24px 16px 56px}
+.foot{max-width:1160px;margin:0 auto;padding:0 16px 28px;color:var(--muted);font-size:12px}
+
+/* ---- komponen umum ---- */
+.page-h{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.page-h p{margin:4px 0 0;color:var(--muted)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.panel>h2{margin-bottom:12px}
+.btn{background:var(--navy);color:#fff;border:1px solid var(--navy);padding:9px 16px;border-radius:var(--r);font-weight:500;line-height:1.2}
+.btn:hover{background:var(--navy-2)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.pri{background:var(--blue);border-color:var(--blue)}.btn.pri:hover{background:#185ab0}
+.btn.sec{background:#fff;color:var(--navy);border-color:var(--line)}.btn.sec:hover{border-color:var(--navy);background:#fff}
+.btn.red{background:var(--red);border-color:var(--red)}.btn.red:hover{background:#a82f2f}
+.btn.xs{padding:5px 10px;font-size:13px}
+.btn.wide{width:100%}
+label{display:block;font-size:13px;font-weight:500;margin:12px 0 4px}
+input,select,textarea{width:100%;padding:9px 11px;border:1px solid #bcc5d0;border-radius:var(--r);background:#fff}
+input[type=checkbox],input[type=radio]{width:auto}
+textarea{min-height:84px;resize:vertical}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}.row>*{flex:1;min-width:150px}
+.row>.fit{flex:none;min-width:0}
 table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-th{background:#f8f9fc;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top}
+th{font-weight:500;color:var(--muted);font-size:13px;background:#f6f8fa;border-bottom:1px solid var(--line)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .tw{overflow-x:auto}
-.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:700;background:var(--pri2);color:var(--pri)}
-.badge.ok{background:#dcfce7;color:var(--ok)}.badge.bad{background:#fee2e2;color:var(--bad)}.badge.warn{background:#fef3c7;color:var(--warn)}
-.auth{max-width:400px;margin:40px auto}
-.tabs{display:flex;gap:6px;margin-bottom:8px}
-.tabs button{flex:1;padding:9px;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer;font-weight:600}
-.tabs button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.row>*{flex:1;min-width:140px}
-.qhead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.timer{font-weight:800;font-size:20px;font-variant-numeric:tabular-nums;color:var(--pri)}
-.timer.low{color:var(--bad)}
-.qbox{font-size:17px;margin:12px 0}
-.opt{display:flex;gap:10px;width:100%;text-align:left;padding:11px 13px;margin:8px 0;border:1.5px solid var(--line);background:#fff;border-radius:12px;cursor:pointer}
-.opt:hover{border-color:var(--pri)}
-.opt b{min-width:22px;color:var(--pri)}
-.opt.sel{border-color:var(--pri);background:var(--pri2)}
-.opt.right{border-color:var(--ok);background:#f0fdf4}.opt.wrong{border-color:var(--bad);background:#fef2f2}
-.nums{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.nums button{width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:600}
-.nums button.ans{background:#dbeafe;border-color:#93c5fd}
-.nums button.rg{background:#fef3c7;border-color:#fbbf24}
-.nums button.cur{outline:2px solid var(--pri)}
-.exp{background:#f8f9fc;border-left:4px solid var(--pri);padding:10px 12px;border-radius:8px;margin-top:10px;font-size:14px}
-.score{text-align:center;padding:14px}.score .n{font-size:34px;font-weight:800}
-details{border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0;background:#fff}
-summary{cursor:pointer;font-weight:600}
-dialog{border:0;border-radius:var(--r);padding:20px;max-width:640px;width:94%;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-dialog::backdrop{background:rgba(15,20,40,.45)}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e2433;color:#fff;padding:10px 18px;border-radius:10px;z-index:99;max-width:90%}
-.toast.err{background:var(--bad)}
-.me{background:#fffbeb}
-.mut{color:var(--mut);font-size:13px}
-.spin{text-align:center;padding:40px;color:var(--mut)}
-@media(max-width:600px){.who{display:none}}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;font-weight:500;background:var(--blue-soft);color:#154f98;white-space:nowrap}
+.tag.ok{background:var(--green-soft);color:#1b6b3b}.tag.bad{background:var(--red-soft);color:#962b2b}
+.tag.warn{background:var(--amber-soft);color:var(--amber-ink)}.tag.gray{background:#eceff3;color:#4a5564}
+.notice{border:1px solid var(--amber);background:var(--amber-soft);color:#5d3e05;padding:10px 14px;border-radius:var(--r);margin-bottom:16px;display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.spin{text-align:center;padding:60px 0;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--navy-2);color:#fff;padding:10px 16px;border-radius:var(--r);z-index:99;max-width:92%;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.toast.err{background:var(--red)}
+dialog{border:0;border-radius:8px;padding:22px;max-width:680px;width:94%;box-shadow:0 20px 60px rgba(8,20,36,.35);color:var(--ink)}
+dialog::backdrop{background:rgba(8,20,36,.55)}
+dialog h2{margin-bottom:6px}
+.dlg-act{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+
+/* ---- ringkasan angka ---- */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));background:var(--paper);border:1px solid var(--line);border-radius:var(--r);margin-bottom:16px}
+.facts>div{padding:14px 18px;border-right:1px solid var(--line-2)}
+.facts>div:last-child{border-right:0}
+.facts .v{font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.2}
+.facts .l{font-size:13px;color:var(--muted)}
+
+/* ---- daftar paket ---- */
+.paket{display:grid;grid-template-columns:76px 1fr auto;gap:16px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line-2)}
+.paket:last-child{border-bottom:0}
+.paket .no{font-size:13px;color:var(--muted);line-height:1.2}
+.paket .no b{display:block;font-size:30px;color:var(--navy);font-weight:600;font-variant-numeric:tabular-nums}
+.paket .meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:2px}
+.paket .st{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.paket.run{background:linear-gradient(90deg,var(--amber-soft),transparent 70%);margin:0 -20px;padding-left:20px;padding-right:20px}
+
+/* ---- auth ---- */
+body.auth #top{display:none}
+body.auth main{max-width:none;padding:0}
+body.auth .foot{display:none}
+.auth-wrap{min-height:100vh;display:grid;grid-template-columns:minmax(320px,5fr) 6fr}
+.auth-side{background:var(--navy);color:#dbe6f3;padding:48px 44px;display:flex;flex-direction:column;justify-content:space-between;gap:28px}
+.auth-side svg{width:64px;height:64px}
+.auth-side h1{color:#fff;font-size:34px;line-height:1.15;margin:20px 0 12px;font-weight:600}
+.auth-side p{max-width:38ch;color:#b9c9dc}
+.auth-side ul{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.auth-side li{padding-left:16px;border-left:3px solid var(--amber);font-size:14px;color:#dbe6f3}
+.auth-main{display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.auth-card{width:100%;max-width:380px}
+.auth-card h2{font-size:22px;margin-bottom:4px}
+.tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:18px}
+.tabs button{background:none;border:0;padding:10px 16px 9px;font-weight:500;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--navy);border-bottom-color:var(--navy)}
+@media(max-width:820px){.auth-wrap{grid-template-columns:1fr}.auth-side{padding:28px 22px}.auth-side h1{font-size:26px}.auth-side ul{display:none}}
+
+/* ---- layar ujian ---- */
+body.exam #top,body.exam .foot{display:none}
+body.exam main{max-width:none;padding:0}
+.ex-head{background:var(--navy);color:#fff;position:sticky;top:0;z-index:10}
+.ex-head .in{max-width:1220px;margin:auto;padding:10px 16px;display:flex;align-items:center;gap:16px}
+.ex-head svg{width:34px;height:34px;flex:none}
+.ex-title{flex:1;min-width:0}
+.ex-title b{display:block;font-size:16px;font-weight:600}
+.ex-title span{font-size:13px;color:#b9c9dc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.ex-save{font-size:12px;color:#9fb4cc;white-space:nowrap}
+.plate{border:2px solid #fff;border-radius:var(--r);padding:3px 14px 4px;text-align:center;background:var(--navy-2);min-width:128px}
+.plate small{display:block;font-size:11px;color:#b9c9dc;line-height:1.1;margin-top:2px}
+.plate .t{font-family:var(--mono);font-size:24px;font-weight:600;letter-spacing:.04em;line-height:1.2}
+.plate.warn{border-color:var(--amber)}.plate.warn .t{color:var(--amber)}
+.plate.crit{border-color:#ff6b6b;animation:pulse 1s infinite}.plate.crit .t{color:#ff8c8c}
+@keyframes pulse{50%{background:#5a1c1c}}
+@media(prefers-reduced-motion:reduce){.plate.crit{animation:none}}
+.ex-main{max-width:1220px;margin:18px auto 40px;padding:0 16px;display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
+.qpanel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r)}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--line);background:#f6f8fa;border-radius:var(--r) var(--r) 0 0;flex-wrap:wrap}
+.qhead .qn{font-weight:600;font-size:16px}
+.fsz{display:flex;gap:4px;align-items:center;font-size:13px;color:var(--muted)}
+.fsz button{border:1px solid var(--line);background:#fff;border-radius:4px;width:30px;height:28px;font-weight:600}
+.fsz button.on{border-color:var(--navy);background:var(--navy);color:#fff}
+.qbody{padding:20px 22px 8px;font-family:var(--serif);font-size:18px;line-height:1.65}
+.qpanel.fs0 .qbody{font-size:16px}.qpanel.fs2 .qbody{font-size:21px}
+.qtext{margin:0 0 18px;max-width:72ch}
+.opt{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:var(--r);padding:11px 14px;margin:0 0 9px;font-family:inherit;font-size:inherit;line-height:1.55}
+.opt:hover:not(:disabled){border-color:var(--blue);background:#f7fafe}
+.opt .ltr{flex:none;width:30px;height:30px;border-radius:50%;border:1.5px solid #9aa7b6;display:grid;place-items:center;font-family:var(--sans);font-size:14px;font-weight:600;color:#44505f;margin-top:1px}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.sel .ltr{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt.right{border-color:var(--green);background:var(--green-soft)}.opt.right .ltr{background:var(--green);border-color:var(--green);color:#fff}
+.opt.wrong{border-color:var(--red);background:var(--red-soft)}.opt.wrong .ltr{background:var(--red);border-color:var(--red);color:#fff}
+.opt:disabled{cursor:default}
+.opt .sk{margin-left:auto;flex:none;font-family:var(--sans);font-size:12px;font-weight:600;background:#eceff3;color:#44505f;border-radius:99px;padding:1px 9px}
+.qfoot{display:flex;gap:10px;flex-wrap:wrap;padding:14px 20px 18px;border-top:1px solid var(--line);margin-top:10px;align-items:center}
+.qfoot .sp{flex:1}
+.ragu{display:flex;align-items:center;gap:8px;border:1.5px solid var(--amber);background:#fff;color:var(--amber-ink);border-radius:var(--r);padding:8px 14px;font-weight:500}
+.ragu.on{background:var(--amber);color:#3d2802}
+.ragu i{width:16px;height:16px;border:2px solid currentColor;border-radius:3px;display:grid;place-items:center;font-style:normal;font-size:12px;line-height:1}
+.clearans{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:13px;padding:4px}
+.fb{margin:2px 0 14px;padding:12px 14px;border-left:4px solid var(--blue);background:#f3f7fc;font-family:var(--sans);font-size:14px;line-height:1.55}
+.fb.ok{border-left-color:var(--green);background:var(--green-soft)}.fb.no{border-left-color:var(--red);background:var(--red-soft)}
+.side{position:sticky;top:84px}
+.side .panel{padding:16px}
+.side h3{margin-bottom:10px}
+.gh{font-size:13px;font-weight:500;color:var(--muted);margin:12px 0 6px}
+.gh:first-of-type{margin-top:0}
+.gnum{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.gnum button{height:36px;border-radius:4px;border:1.5px solid #b7c0cc;background:#fff;font-weight:500;font-variant-numeric:tabular-nums;padding:0}
+.gnum button.ans{background:var(--green);border-color:var(--green);color:#fff}
+.gnum button.rg{background:var(--amber);border-color:var(--amber);color:#3d2802}
+.gnum button.cur{outline:3px solid var(--navy);outline-offset:1px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin:12px 0 4px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;border:1.5px solid #b7c0cc;vertical-align:-1px;margin-right:5px}
+.legend i.a{background:var(--green);border-color:var(--green)}.legend i.r{background:var(--amber);border-color:var(--amber)}
+.sumline{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}
+.mobgrid{display:none}
+@media(max-width:940px){
+  .ex-main{grid-template-columns:1fr}.side{display:none;position:static}
+  .mobgrid{display:inline-flex}
+  .ex-save{display:none}
+  .plate{min-width:0;padding:2px 10px}.plate .t{font-size:19px}
+  .qbody{padding:16px 14px 4px}.qhead,.qfoot{padding-left:14px;padding-right:14px}
+}
+.ldg{position:fixed;inset:0;background:rgba(237,240,244,.88);display:grid;place-items:center;z-index:50;color:var(--navy);font-weight:500}
+
+/* ---- hasil ---- */
+.verdict{display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid var(--line);border-left:6px solid var(--muted);background:#fff;border-radius:var(--r);padding:18px 22px;margin-bottom:16px}
+.verdict.ok{border-left-color:var(--green)}.verdict.bad{border-left-color:var(--red)}
+.verdict .big{font-size:42px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.sc3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-bottom:16px}
+.sc{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.sc .n{font-size:30px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.2}
+.sc .n small{font-size:14px;color:var(--muted);font-weight:400}
+.bar{position:relative;height:10px;background:#e8ecf1;border-radius:99px;margin:10px 0 6px}
+.bar>i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--blue)}
+.bar>i.ok{background:var(--green)}.bar>i.bad{background:var(--red)}
+.bar>u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.filters button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:5px 13px;font-size:13px}
+.filters button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.rv{border:1px solid var(--line);border-radius:var(--r);background:#fff;margin-bottom:8px}
+.rv>summary{list-style:none;cursor:pointer;padding:11px 14px;display:flex;gap:10px;align-items:center}
+.rv>summary::-webkit-details-marker{display:none}
+.rv .mk{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff}
+.rv .mk.ok{background:var(--green)}.rv .mk.no{background:var(--red)}.rv .mk.kosong{background:#8b96a5}.rv .mk.mid{background:var(--amber);color:#3d2802}
+.rv .tt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rv .bd{padding:4px 16px 16px;font-family:var(--serif);font-size:16.5px;line-height:1.6}
+.rv .opt{font-size:16px;padding:8px 12px;cursor:default}
+.rv .opt:hover{border-color:var(--line);background:#fff}
+.rv .opt.right:hover{background:var(--green-soft);border-color:var(--green)}.rv .opt.wrong:hover{background:var(--red-soft);border-color:var(--red)}
+.rv .opt.sel:hover{background:var(--blue-soft);border-color:var(--blue)}
+
+/* ---- ranking ---- */
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.pod{background:#fff;border:1px solid var(--line);border-top:5px solid #aab4c1;border-radius:var(--r);padding:14px 16px}
+.pod.p1{border-top-color:var(--amber)}.pod.p2{border-top-color:#8fa0b5}.pod.p3{border-top-color:#b98355}
+.pod .rk{font-size:13px;color:var(--muted)}
+.pod .nm{font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pod .pt{font-size:26px;font-weight:600;font-variant-numeric:tabular-nums}
+tr.me td{background:var(--amber-soft)}
+@media(max-width:640px){.podium{grid-template-columns:1fr}.paket{grid-template-columns:56px 1fr}.paket .st{grid-column:1/-1;justify-content:flex-start}}
+
+.kv{display:grid;grid-template-columns:180px 1fr;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:16px}
+.kv>div{padding:9px 14px;border-bottom:1px solid var(--line-2)}
+.kv>div:nth-child(odd){background:#f6f8fa;color:var(--muted)}
+.kv>div:nth-last-child(-n+2){border-bottom:0}
+.pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:12px}
+.optrow{display:flex;gap:8px;align-items:flex-end}
+.optrow .ltr{flex:none;width:26px;height:38px;display:grid;place-items:center;font-weight:600;color:var(--muted)}
+.optrow .t{flex:1}.optrow .s{flex:none;width:84px}.optrow .k{flex:none;width:60px;text-align:center;padding-bottom:9px}
 </style>
 </head>
 <body>
-<div class="top"><div class="in" id="topbar"></div></div>
+<header id="top"><div class="in" id="topin"></div></header>
 <main id="app"></main>
+<div class="foot" id="foot">Simulasi untuk latihan. Soal dan penilaian tidak mewakili seleksi resmi.</div>
 <dialog id="dlg"></dialog>
+<noscript><p style="padding:20px">Aplikasi ini membutuhkan JavaScript.</p></noscript>
 
 <script>
 /* ========= KONFIGURASI =========
-   Isi URL Web App dari Google Apps Script di sini (setelah deploy),
-   atau biarkan kosong lalu isi lewat halaman pengaturan awal. */
-const API_URL_DEFAULT = "https://script.google.com/macros/s/AKfycbx0R7uOMybcgHJGuhnX3WUyAcyj5lE8_mYFq9edvfzpxKbMG1CCq15--Cm9fVIUZVE/exec";
+   Isi URL Web App Google Apps Script (berakhiran /exec) di sini, atau biarkan kosong
+   lalu tempel lewat halaman Pengaturan Awal saat pertama dibuka. */
+const API_URL_DEFAULT = "";
 
 /* ========= UTIL ========= */
-const $ = s => document.querySelector(s);
-const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let API = localStorage.getItem('API_URL') || API_URL_DEFAULT;
-let S = { token: localStorage.getItem('token') || '', user: JSON.parse(localStorage.getItem('user') || 'null'), view: '' };
-let timer = null;
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const lines = (s) => esc(s).replace(/\n/g, '<br>');
+const safeGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const safeSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+const safeDel = (k) => { try { localStorage.removeItem(k); } catch (e) {} };
+let API = safeGet('API_URL') || API_URL_DEFAULT;
+let S = { token: safeGet('token') || '', user: null, view: '' };
+try { S.user = JSON.parse(safeGet('user') || 'null'); } catch (e) {}
+let E = null;          // sesi ujian aktif
+let clock = null;      // interval timer
+
+const EMBLEM = `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4 56 13v18c0 15-10 24-24 29C18 55 8 46 8 31V13z" fill="#0b2038" stroke="#f2a93b" stroke-width="3"/><path d="m32 19 4.2 8.6 9.4 1.3-6.8 6.6 1.6 9.4L32 40.5l-8.4 4.4 1.6-9.4-6.8-6.6 9.4-1.3z" fill="#f2a93b"/></svg>`;
 
 async function api(action, data) {
-  const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(Object.assign({ action, token: S.token }, data || {})) });
-  const j = await r.json();
+  let r;
+  try {
+    r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ action, token: S.token }, data || {})) });
+  } catch (e) { throw new Error('Tidak dapat terhubung ke server. Periksa koneksi internet Anda.'); }
+  let j;
+  try { j = await r.json(); } catch (e) { throw new Error('Server memberi jawaban yang tidak dikenali. Periksa URL Web App dan pengaturan deploy ("Anyone").'); }
   if (!j.ok) {
-    if (j.error === 'AUTH') { logout(true); throw new Error('Sesi berakhir, silakan login lagi'); }
+    if (j.error === 'AUTH') { if (!E) { logout(true); } throw new Error('Sesi login berakhir. Silakan masuk lagi.'); }
     throw new Error(j.error);
   }
   return j.data;
@@ -101,363 +275,550 @@ async function api(action, data) {
 function toast(msg, err) {
   const t = document.createElement('div');
   t.className = 'toast' + (err ? ' err' : '');
+  t.setAttribute('role', err ? 'alert' : 'status');
   t.textContent = msg; document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3200);
+  setTimeout(() => t.remove(), err ? 5000 : 3200);
 }
-const loading = () => { $('#app').innerHTML = '<div class="spin">Memuat…</div>'; };
-const run = fn => async (...a) => { try { await fn(...a); } catch (e) { toast(e.message, true); } };
-function fmtDur(s) { s = Number(s) || 0; return Math.floor(s / 60) + 'm ' + (s % 60) + 's'; }
-function lulusBadge(l) { return l ? `<span class="badge ${l === 'LULUS' ? 'ok' : 'bad'}">${esc(l)}</span>` : '<span class="mut">-</span>'; }
+const loading = (txt) => { $('#app').innerHTML = `<div class="spin">${esc(txt || 'Memuat…')}</div>`; };
+const run = (fn) => async (...a) => { try { await fn(...a); } catch (e) { toast(e.message, true); } };
+const pad2 = (n) => String(n).padStart(2, '0');
+const hms = (s) => { s = Math.max(0, Math.floor(s)); return pad2(Math.floor(s / 3600)) + ':' + pad2(Math.floor(s / 60) % 60) + ':' + pad2(s % 60); };
+const fmtDur = (s) => { s = Number(s) || 0; return Math.floor(s / 60) + ' mnt ' + pad2(s % 60) + ' dtk'; };
+const statusTag = (l) => l ? `<span class="tag ${l === 'LULUS' ? 'ok' : 'bad'}">${l === 'LULUS' ? 'Lulus passing grade' : 'Belum lulus'}</span>` : '<span class="mut">-</span>';
+const paketName = (p) => (Number(p) === 0 ? 'Latihan' : 'Paket ' + p);
+const jenis = (h) => (h.mode === 'tryout' ? 'Tryout ' + paketName(h.paket) : 'Latihan ' + esc(h.kategori));
+const dlg = (html) => { $('#dlg').innerHTML = html; $('#dlg').showModal(); };
+const dlgClose = () => { const d = $('#dlg'); if (d.open) d.close(); };
 
-/* ========= NAV & LAYOUT ========= */
+/* ========= LAYOUT & NAV ========= */
 const NAV = {
-  member: [['home', 'Beranda'], ['latihan', 'Latihan Soal'], ['tryout', 'Tryout SKD'], ['ranking', 'Ranking']],
-  admin: [['adminHome', 'Dashboard'], ['adminSoal', 'Bank Soal'], ['adminUser', 'Pengguna'], ['adminHasil', 'Hasil & Ranking'], ['adminSetting', 'Pengaturan']]
+  member: [['home', 'Beranda'], ['tryout', 'Tryout SKD'], ['latihan', 'Latihan soal'], ['ranking', 'Peringkat']],
+  admin: [['adminHome', 'Ringkasan'], ['adminSoal', 'Bank soal'], ['adminUser', 'Pengguna'], ['adminHasil', 'Hasil'], ['ranking', 'Peringkat'], ['adminSetting', 'Pengaturan']]
 };
 function drawTop() {
-  const tb = $('#topbar');
-  if (!S.user) { tb.innerHTML = '<span class="brand">🎓 Tes CPNS Online</span>'; return; }
-  tb.innerHTML = `<span class="brand">🎓 Tes CPNS</span><div class="nav">` +
-    NAV[S.user.role === 'admin' ? 'admin' : 'member'].map(n => `<button class="${S.view === n[0] ? 'on' : ''}" onclick="go('${n[0]}')">${n[1]}</button>`).join('') +
-    (S.user.role === 'admin' ? `<button class="${S.view === 'ranking' ? 'on' : ''}" onclick="go('ranking')">Ranking</button>` : '') +
-    `</div><span class="who">${esc(S.user.nama)} (${esc(S.user.role)})</span>
-    <button class="btn sm sec" onclick="vPassword()">Ganti Password</button>
-    <button class="btn sm sec" onclick="logout()">Keluar</button>`;
+  const t = $('#topin');
+  document.body.classList.toggle('auth', !S.user);
+  if (!S.user) { t.innerHTML = ''; return; }
+  const items = NAV[S.user.role === 'admin' ? 'admin' : 'member'];
+  t.innerHTML = `<a class="brand" href="#" onclick="go(S.user.role==='admin'?'adminHome':'home');return false">${EMBLEM}<span>Simulasi SKD</span></a>
+  <nav class="nav" aria-label="Menu utama">${items.map((n) => `<button class="${S.view === n[0] ? 'on' : ''}" onclick="go('${n[0]}')">${n[1]}</button>`).join('')}</nav>
+  <div class="who"><span><b>${esc(S.user.nama)}</b> (${esc(S.user.role)})</span>
+  <button class="linkbtn" onclick="vPassword()">Ganti password</button><button class="linkbtn" onclick="logout()">Keluar</button></div>`;
 }
-function go(v) {
-  if (timer && !confirm('Tes sedang berjalan. Keluar dari halaman ini akan membatalkan tes. Lanjutkan?')) return;
-  clearInterval(timer); timer = null; window.Q = null;
-  S.view = v; drawTop();
-  run(views[v])();
+function go(v, arg) {
+  if (E) return;
+  S.view = v; drawTop(); window.scrollTo(0, 0);
+  document.body.classList.remove('exam');
+  run(views[v])(arg);
 }
 function logout(silent) {
-  clearInterval(timer); timer = null;
-  S.token = ''; S.user = null; localStorage.removeItem('token'); localStorage.removeItem('user');
-  S.view = ''; drawTop(); vAuth();
+  stopClock(); E = null;
+  S.token = ''; S.user = null; safeDel('token'); safeDel('user');
+  S.view = ''; document.body.classList.remove('exam'); drawTop(); vAuth();
   if (!silent) toast('Anda sudah keluar');
 }
 
 /* ========= AUTH ========= */
 function vSetup() {
-  $('#app').innerHTML = `<div class="card auth"><h2>Pengaturan Awal</h2>
-  <p class="sub">Tempel URL Web App Google Apps Script Anda (berakhiran <code>/exec</code>).</p>
-  <label>URL Web App</label><input id="su" placeholder="https://script.google.com/macros/s/.../exec">
-  <button class="btn" style="margin-top:14px;width:100%" onclick="saveSetup()">Simpan</button></div>`;
+  $('#app').innerHTML = `<div class="auth-wrap"><aside class="auth-side"><div>${EMBLEM}<h1>Pengaturan awal</h1><p>Hubungkan halaman ini ke Google Spreadsheet Anda melalui Web App Apps Script.</p></div></aside>
+  <section class="auth-main"><div class="auth-card"><h2>URL Web App</h2><p class="mut">Tempel URL hasil deploy Apps Script, berakhiran <code>/exec</code>.</p>
+  <label for="su">URL</label><input id="su" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off">
+  <button class="btn pri wide" style="margin-top:16px" onclick="saveSetup()">Simpan dan lanjut</button></div></section></div>`;
 }
 function saveSetup() {
   const v = $('#su').value.trim();
-  if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(v)) return toast('URL tidak valid', true);
-  localStorage.setItem('API_URL', v); API = v; vAuth();
+  if (!/^https:\/\/script\.google(usercontent)?\.com\/.+\/exec$/.test(v)) return toast('URL harus berupa alamat Web App berakhiran /exec', true);
+  safeSet('API_URL', v); API = v; vAuth();
 }
 let authTab = 'login';
 function vAuth() {
   drawTop();
   if (!API) return vSetup();
-  $('#app').innerHTML = `<div class="card auth">
-  <div class="tabs"><button class="${authTab === 'login' ? 'on' : ''}" onclick="authTab='login';vAuth()">Masuk</button>
-  <button class="${authTab === 'reg' ? 'on' : ''}" onclick="authTab='reg';vAuth()">Daftar</button></div>
-  <form id="af">
-  ${authTab === 'reg' ? '<label>Nama lengkap</label><input id="a_nama" required>' : ''}
-  <label>Username</label><input id="a_u" required autocomplete="username">
-  <label>Password</label><input id="a_p" type="password" required autocomplete="current-password">
-  <button class="btn" style="margin-top:16px;width:100%" id="a_btn">${authTab === 'login' ? 'Masuk' : 'Daftar Akun Member'}</button></form>
-  <p class="mut" style="text-align:center;margin-top:14px"><a href="#" onclick="localStorage.removeItem('API_URL');API='';vSetup();return false">Ubah URL server</a></p></div>`;
-  $('#af').onsubmit = run(async e => {
+  const reg = authTab === 'reg';
+  $('#app').innerHTML = `<div class="auth-wrap"><aside class="auth-side"><div>${EMBLEM}<h1>Simulasi SKD CPNS</h1>
+  <p>Berlatih seleksi kompetensi dasar di layar ujian yang meniru tes sesungguhnya, dengan penilaian dan peringkat otomatis.</p></div>
+  <ul><li>5 paket tryout, masing-masing 110 soal: 30 TWK, 35 TIU, 45 TKP</li><li>Waktu 100 menit. Jawaban tersimpan otomatis dan bisa dilanjutkan jika browser tertutup</li><li>Nilai, status passing grade, dan peringkat langsung muncul setelah selesai</li></ul></aside>
+  <section class="auth-main"><div class="auth-card"><div class="tabs" role="tablist"><button role="tab" class="${reg ? '' : 'on'}" onclick="authTab='login';vAuth()">Masuk</button><button role="tab" class="${reg ? 'on' : ''}" onclick="authTab='reg';vAuth()">Daftar</button></div>
+  <h2>${reg ? 'Buat akun peserta' : 'Masuk ke akun Anda'}</h2>
+  <form id="af" autocomplete="on">
+  ${reg ? '<label for="a_nama">Nama lengkap</label><input id="a_nama" required autocomplete="name">' : ''}
+  <label for="a_u">Username</label><input id="a_u" required autocomplete="username" autocapitalize="none">
+  <label for="a_p">Password${reg ? ' (minimal 6 karakter)' : ''}</label><input id="a_p" type="password" required autocomplete="${reg ? 'new-password' : 'current-password'}">
+  <button class="btn pri wide" style="margin-top:18px" id="a_btn">${reg ? 'Daftar dan masuk' : 'Masuk'}</button></form>
+  <p class="mut sm" style="text-align:center;margin-top:16px"><a href="#" onclick="safeDel('API_URL');API='';vSetup();return false">Ubah URL server</a></p></div></section></div>`;
+  $('#af').onsubmit = run(async (e) => {
     e.preventDefault();
-    const b = $('#a_btn'); b.disabled = true;
+    const b = $('#a_btn'); b.disabled = true; b.textContent = 'Memproses…';
     try {
       const d = { username: $('#a_u').value.trim(), password: $('#a_p').value };
-      if (authTab === 'reg') d.nama = $('#a_nama').value.trim();
-      const r = await api(authTab === 'login' ? 'login' : 'register', d);
-      S.token = r.token; S.user = r.user;
-      localStorage.setItem('token', r.token); localStorage.setItem('user', JSON.stringify(r.user));
-      go(r.user.role === 'admin' ? 'adminHome' : 'home');
-    } finally { b.disabled = false; }
+      if (reg) d.nama = $('#a_nama').value.trim();
+      const r = await api(reg ? 'register' : 'login', d);
+      S.token = r.token; S.user = r.user; safeSet('token', r.token); safeSet('user', JSON.stringify(r.user));
+      await afterLogin();
+    } finally { if (b.isConnected) { b.disabled = false; b.textContent = reg ? 'Daftar dan masuk' : 'Masuk'; } }
   });
 }
-function vPassword() {
-  dlg(`<h2>Ganti Password</h2><label>Password lama</label><input id="pl" type="password">
-  <label>Password baru (min. 6 karakter)</label><input id="pb" type="password">
-  <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end"><button class="btn sec" onclick="dlgClose()">Batal</button>
-  <button class="btn" onclick="run(async()=>{await api('gantiPassword',{lama:$('#pl').value,baru:$('#pb').value});dlgClose();toast('Password diganti')})()">Simpan</button></div>`);
+async function afterLogin() {
+  drawTop();
+  if (S.user.role !== 'admin') {
+    try { const a = await api('aktif'); if (a.aktif) { toast('Melanjutkan tryout yang masih berjalan'); return enterExam(a); } } catch (e) {}
+  }
+  go(S.user.role === 'admin' ? 'adminHome' : 'home');
 }
-function dlg(html) { $('#dlg').innerHTML = html; $('#dlg').showModal(); }
-function dlgClose() { $('#dlg').close(); }
+function vPassword() {
+  dlg(`<h2>Ganti password</h2><label for="pl">Password lama</label><input id="pl" type="password" autocomplete="current-password">
+  <label for="pb">Password baru (minimal 6 karakter)</label><input id="pb" type="password" autocomplete="new-password">
+  <div class="dlg-act"><button class="btn sec" onclick="dlgClose()">Batal</button><button class="btn pri" onclick="savePw()">Simpan password</button></div>`);
+}
+window.savePw = run(async () => { await api('gantiPassword', { lama: $('#pl').value, baru: $('#pb').value }); dlgClose(); toast('Password diganti'); if (S.user) { S.user.passwordDefault = false; safeSet('user', JSON.stringify(S.user)); } });
 
 /* ========= MEMBER ========= */
 const views = {};
+function paketRows(list, aktif) {
+  return list.map((p) => {
+    const n = p.TWK + p.TIU + p.TKP;
+    let aksi;
+    if (!p.ada) aksi = '<span class="tag gray">Belum ada soal</span>';
+    else if (p.berjalan) aksi = `<button class="btn pri" onclick="lanjutTryout(${p.paket})">Lanjutkan ujian</button>`;
+    else if (aktif) aksi = '<span class="tag gray">Selesaikan tes berjalan dulu</span>';
+    else aksi = `<button class="btn ${p.percobaan ? 'sec' : 'pri'}" onclick="go('konfirmasi',${p.paket})">${p.percobaan ? 'Kerjakan lagi' : 'Mulai'}</button>`;
+    const st = p.berjalan ? `<span class="tag warn">Sedang berjalan, sisa ${hms(p.sisa)}</span>`
+      : p.percobaan ? `<span class="sm">Terbaik <b>${p.terbaik}</b> (${p.percobaan}x)</span> ${p.lulus ? '<span class="tag ok">Pernah lulus PG</span>' : '<span class="tag gray">Belum lulus PG</span>'}` : '<span class="tag gray">Belum dikerjakan</span>';
+    return `<div class="paket ${p.berjalan ? 'run' : ''}"><div class="no">Paket<b>${p.paket}</b></div>
+      <div><h3>Tryout SKD paket ${p.paket}</h3><div class="meta"><span>${n} soal${p.lengkap ? '' : ' (belum lengkap)'}</span><span>TWK ${p.TWK}</span><span>TIU ${p.TIU}</span><span>TKP ${p.TKP}</span></div></div>
+      <div class="st">${st}${aksi}</div></div>`;
+  }).join('') || '<div class="empty">Belum ada paket aktif. Hubungi admin.</div>';
+}
+window.lanjutTryout = run(async (p) => { enterExam(await api('mulai', { paket: p })); });
+
 views.home = async () => {
   loading();
-  const [rw, rk] = await Promise.all([api('riwayat'), api('ranking')]);
-  const tryouts = rw.filter(r => r.mode === 'tryout');
+  const [pk, rw, rk] = await Promise.all([api('paket'), api('riwayat'), api('ranking')]);
+  const tryouts = rw.filter((r) => r.mode === 'tryout');
   const best = tryouts.reduce((m, r) => Math.max(m, r.total), 0);
-  const me = rk.find(r => r.saya);
-  $('#app').innerHTML = `<h1>Halo, ${esc(S.user.nama)} 👋</h1><p class="sub">Siap latihan SKD hari ini?</p>
-  <div class="grid g4">
-   <div class="card stat"><div class="n">${tryouts.length}</div><div class="l">Tryout dikerjakan</div></div>
-   <div class="card stat"><div class="n">${best || '-'}</div><div class="l">Skor tryout terbaik (maks 550)</div></div>
-   <div class="card stat"><div class="n">${me ? '#' + me.peringkat : '-'}</div><div class="l">Peringkat Anda dari ${rk.length} peserta</div></div>
-   <div class="card stat"><div class="n">${rw.length - tryouts.length}</div><div class="l">Sesi latihan</div></div>
-  </div>
-  <div class="row" style="margin-bottom:16px"><button class="btn" onclick="go('tryout')">Mulai Tryout SKD</button><button class="btn sec" onclick="go('latihan')">Latihan Soal</button></div>
-  <div class="card"><h2>Riwayat Tes</h2>${rw.length ? `<div class="tw"><table><tr><th>Waktu</th><th>Jenis</th><th>TWK</th><th>TIU</th><th>TKP</th><th>Total</th><th>Durasi</th><th>Status</th></tr>
-  ${rw.map(r => `<tr><td>${esc(r.waktu)}</td><td>${r.mode === 'tryout' ? 'Tryout SKD' : 'Latihan ' + esc(r.kategori)}</td><td>${r.TWK}</td><td>${r.TIU}</td><td>${r.TKP}</td><td><b>${r.total}</b></td><td>${fmtDur(r.durasi_detik)}</td><td>${lulusBadge(r.lulus)}</td></tr>`).join('')}</table></div>` : '<p class="mut">Belum ada riwayat.</p>'}</div>`;
+  const avg = tryouts.length ? Math.round(tryouts.reduce((a, r) => a + r.total, 0) / tryouts.length) : null;
+  const me = rk.ALL.find((r) => r.saya);
+  $('#app').innerHTML = `<div class="page-h"><div><h1>Halo, ${esc(S.user.nama)}</h1><p>Pilih paket tryout atau berlatih per kategori.</p></div></div>
+  <div class="facts"><div><div class="v">${tryouts.length}</div><div class="l">Tryout selesai</div></div><div><div class="v">${best || '-'}</div><div class="l">Skor terbaik (maks 550)</div></div>
+  <div><div class="v">${avg == null ? '-' : avg}</div><div class="l">Rata-rata skor tryout</div></div><div><div class="v">${me ? '#' + me.peringkat : '-'}</div><div class="l">Peringkat dari ${rk.ALL.length} peserta</div></div></div>
+  <div class="panel"><h2>Paket tryout SKD</h2>${paketRows(pk.paket, pk.aktif)}</div>
+  <div class="panel"><h2>Riwayat tes</h2>${riwayatTable(rw)}</div>`;
 };
-
-views.latihan = async () => {
-  $('#app').innerHTML = `<h1>Latihan Soal</h1><p class="sub">Jawaban langsung dikoreksi disertai pembahasan.</p>
-  <div class="card"><div class="row">
-  <div><label>Kategori</label><select id="lk"><option value="TWK">TWK - Tes Wawasan Kebangsaan</option><option value="TIU">TIU - Tes Intelegensia Umum</option><option value="TKP">TKP - Tes Karakteristik Pribadi</option><option value="CAMPURAN">Campuran</option></select></div>
-  <div><label>Jumlah soal</label><select id="lj"><option>5</option><option selected>10</option><option>20</option><option>30</option></select></div>
-  <div><button class="btn" style="width:100%" onclick="mulaiLatihan()">Mulai Latihan</button></div></div></div>`;
-};
-window.mulaiLatihan = run(async () => {
-  const p = await api('getSoal', { mode: 'latihan', kategori: $('#lk').value, jumlah: $('#lj').value });
-  runQuiz(p);
-});
+function riwayatTable(rw) {
+  if (!rw.length) return '<div class="empty">Belum ada riwayat. Mulai tryout pertama Anda.</div>';
+  return `<div class="tw"><table><tr><th>Waktu</th><th>Jenis</th><th class="num">TWK</th><th class="num">TIU</th><th class="num">TKP</th><th class="num">Total</th><th>Durasi</th><th>Status</th><th></th></tr>
+  ${rw.map((r) => `<tr><td class="nowrap">${esc(r.waktu.slice(0, 16))}</td><td>${jenis(r)}</td><td class="num">${r.mode === 'tryout' ? r.TWK : '-'}</td><td class="num">${r.mode === 'tryout' ? r.TIU : '-'}</td><td class="num">${r.mode === 'tryout' ? r.TKP : '-'}</td>
+  <td class="num"><b>${r.total}</b></td><td class="nowrap">${fmtDur(r.durasi_detik)}</td><td>${statusTag(r.lulus)}</td><td><button class="btn xs sec" onclick="lihatDetail('${esc(r.id)}')">Pembahasan</button></td></tr>`).join('')}</table></div>`;
+}
+window.lihatDetail = run(async (id) => { loading('Memuat pembahasan…'); showResult(await api('detail', { id }), true); });
 
 views.tryout = async () => {
   loading();
-  const c = await api('config');
-  $('#app').innerHTML = `<h1>Tryout SKD CPNS</h1><p class="sub">Simulasi Seleksi Kompetensi Dasar dengan penilaian otomatis dan masuk peringkat.</p>
-  <div class="card"><h2>Ketentuan</h2><ul>
-  <li>Waktu pengerjaan: <b>${c.durasi_menit} menit</b> (timer berjalan otomatis, tes dikumpulkan sendiri saat waktu habis).</li>
-  <li>Jumlah soal: TWK ${c.jumlah_twk}, TIU ${c.jumlah_tiu}, TKP ${c.jumlah_tkp} (sesuai ketersediaan bank soal).</li>
-  <li>Skor: TWK &amp; TIU benar = 5, salah/kosong = 0. TKP = 1 sampai 5 sesuai pilihan.</li>
-  <li>Passing grade: TWK ≥ ${c.pg_twk}, TIU ≥ ${c.pg_tiu}, TKP ≥ ${c.pg_tkp}.</li>
-  <li>Peringkat memakai <b>skor tryout terbaik</b>. Seri diurutkan dari TIU, TWK, lalu waktu tercepat.</li></ul>
-  <button class="btn" onclick="mulaiTryout()">Mulai Tryout Sekarang</button></div>`;
+  const pk = await api('paket');
+  const c = pk.config;
+  $('#app').innerHTML = `<div class="page-h"><div><h1>Tryout SKD</h1><p>Simulasi seleksi kompetensi dasar. Tampilan dan aturan mengikuti tes komputer sesungguhnya.</p></div></div>
+  <div class="panel"><h2>Aturan pengerjaan</h2><ul style="margin:0;padding-left:20px;display:grid;gap:4px">
+  <li>Waktu <b>${c.durasi_menit} menit</b>. Jika waktu habis, jawaban dikumpulkan otomatis.</li>
+  <li>Jumlah soal: TWK ${c.jumlah_twk}, TIU ${c.jumlah_tiu}, TKP ${c.jumlah_tkp} (total ${c.jumlah_twk + c.jumlah_tiu + c.jumlah_tkp}).</li>
+  <li>Skor TWK dan TIU: benar 5, salah atau kosong 0. Skor TKP: 1 sampai 5 menurut pilihan.</li>
+  <li>Passing grade: TWK ${c.pg_twk}, TIU ${c.pg_tiu}, TKP ${c.pg_tkp}. Ketiganya harus terpenuhi.</li>
+  <li>Peringkat memakai skor terbaik tiap peserta. Jika seri, urutan ditentukan nilai TIU, TWK, lalu waktu tercepat.</li>
+  <li>Jawaban tersimpan otomatis. Jika browser tertutup, buka lagi dan lanjutkan dari halaman ini.</li></ul></div>
+  <div class="panel"><h2>Pilih paket</h2>${paketRows(pk.paket, pk.aktif)}</div>`;
 };
-window.mulaiTryout = run(async () => {
-  if (!confirm('Mulai tryout sekarang? Timer langsung berjalan.')) return;
-  runQuiz(await api('getSoal', { mode: 'tryout' }));
+views.konfirmasi = async (paket) => {
+  loading();
+  const pk = await api('paket');
+  const p = pk.paket.find((x) => x.paket === paket), c = pk.config;
+  if (!p) return go('tryout');
+  $('#app').innerHTML = `<div class="page-h"><div><h1>Konfirmasi tryout paket ${paket}</h1><p>Periksa data berikut sebelum memulai. Timer berjalan segera setelah Anda menekan tombol mulai.</p></div></div>
+  <div class="kv"><div>Nama peserta</div><div>${esc(S.user.nama)}</div><div>Username</div><div>${esc(S.user.username)}</div><div>Paket</div><div>Paket ${paket}</div>
+  <div>Jumlah soal</div><div>${p.TWK + p.TIU + p.TKP} soal (TWK ${p.TWK}, TIU ${p.TIU}, TKP ${p.TKP})</div><div>Waktu</div><div>${c.durasi_menit} menit</div>
+  <div>Passing grade</div><div>TWK ${c.pg_twk}, TIU ${c.pg_tiu}, TKP ${c.pg_tkp}</div></div>
+  <div class="panel"><h2>Petunjuk</h2><ul style="margin:0 0 12px;padding-left:20px;display:grid;gap:4px">
+  <li>Pilih satu jawaban per soal. Tombol <b>Ragu-ragu</b> menandai soal untuk diperiksa lagi.</li>
+  <li>Anda bisa pindah ke nomor mana pun lewat daftar soal di sisi kanan.</li>
+  <li>Jangan menutup tab selama ujian. Bila terpaksa, jawaban terakhir tetap tersimpan dan waktu tetap berjalan.</li></ul>
+  <label style="display:flex;gap:10px;align-items:center;font-weight:400"><input type="checkbox" id="agree"> Data di atas sudah benar dan saya siap mengerjakan.</label>
+  <div style="margin-top:16px;display:flex;gap:8px"><button class="btn sec" onclick="go('tryout')">Kembali</button><button class="btn pri" id="goBtn" disabled onclick="mulaiTryout(${paket})">Mulai mengerjakan</button></div></div>`;
+  $('#agree').onchange = (e) => { $('#goBtn').disabled = !e.target.checked; };
+};
+window.mulaiTryout = run(async (p) => {
+  const b = $('#goBtn'); if (b) { b.disabled = true; b.textContent = 'Menyiapkan soal…'; }
+  try { const d = await api('mulai', { paket: p }); if (d.lanjutan) toast('Anda masih punya tes berjalan (paket ' + d.paket + '). Melanjutkan.'); enterExam(d); }
+  finally { if (b && b.isConnected) { b.disabled = false; b.textContent = 'Mulai mengerjakan'; } }
 });
 
-/* ----- Quiz runner ----- */
-function runQuiz(p) {
-  clearInterval(timer);
-  window.Q = { sesi: p.sesi, mode: p.mode, soal: p.soal, i: 0, jawab: {}, ragu: {}, cek: {}, end: p.durasi ? Date.now() + p.durasi * 60000 : 0, busy: false };
-  if (Q.end) {
-    timer = setInterval(() => {
-      const left = Math.max(0, Q.end - Date.now());
-      const el = $('#tm');
-      if (el) {
-        const s = Math.floor(left / 1000);
-        el.textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
-        el.classList.toggle('low', s < 300);
-      }
-      if (left <= 0) { clearInterval(timer); toast('Waktu habis! Jawaban dikumpulkan otomatis.'); finishQuiz(true); }
-    }, 500);
+views.latihan = async () => {
+  loading();
+  const pk = await api('paket');
+  const L = pk.latihan;
+  $('#app').innerHTML = `<div class="page-h"><div><h1>Latihan soal</h1><p>Setiap jawaban langsung dikoreksi lengkap dengan pembahasan. Tidak ada timer dan tidak masuk peringkat.</p></div></div>
+  <div class="panel"><div class="row"><div><label for="lk">Kategori</label><select id="lk">
+  <option value="TWK">TWK, Tes Wawasan Kebangsaan (${L.TWK} soal)</option><option value="TIU">TIU, Tes Intelegensia Umum (${L.TIU} soal)</option>
+  <option value="TKP">TKP, Tes Karakteristik Pribadi (${L.TKP} soal)</option><option value="CAMPURAN">Campuran semua kategori</option></select></div>
+  <div><label for="lj">Jumlah soal</label><select id="lj"><option>5</option><option selected>10</option><option>20</option><option>30</option><option>50</option></select></div>
+  <div class="fit"><button class="btn pri" onclick="mulaiLatihan()">Mulai latihan</button></div></div></div>`;
+};
+window.mulaiLatihan = run(async () => { enterExam(await api('getSoal', { mode: 'latihan', kategori: $('#lk').value, jumlah: $('#lj').value })); });
+
+/* ========= LAYAR UJIAN ========= */
+function stopClock() { if (clock) { clearInterval(clock); clock = null; } if (E && E.t) clearTimeout(E.t); }
+function enterExam(p) {
+  stopClock(); dlgClose();
+  let jawab = Object.assign({}, p.jawab || {}), ragu = Object.assign({}, p.ragu || {});
+  if (p.mode === 'tryout') {
+    try { const loc = JSON.parse(safeGet('cat_' + p.sesi) || 'null'); if (loc) { jawab = Object.assign({}, jawab, loc.jawab || {}); ragu = Object.assign({}, ragu, loc.ragu || {}); } } catch (e) {}
   }
-  drawQuiz();
+  E = { sesi: p.sesi, mode: p.mode, paket: p.paket, kategori: p.kategori, soal: p.soal, jawab, ragu, cek: {}, i: 0, fs: Number(safeGet('fs') || 1),
+        endAt: p.durasi ? Date.now() + p.sisa * 1000 : 0, ver: 0, savedVer: 0, saving: false, t: null, busy: false, warned: {}, closing: false };
+  const first = E.soal.findIndex((s) => !E.jawab[s.id]);
+  E.i = first > 0 && Object.keys(E.jawab).length ? first : 0;
+  document.body.classList.add('exam'); window.scrollTo(0, 0);
+  drawExam();
+  if (E.endAt) { clock = setInterval(tick, 250); tick(); }
 }
-function drawQuiz() {
-  const s = Q.soal[Q.i], tryout = Q.mode === 'tryout', ck = Q.cek[s.id], pil = Q.jawab[s.id];
-  const opts = Object.keys(s.opsi).map(k => {
-    let cls = 'opt';
-    if (ck) { if (k === ck.kunci && s.kategori !== 'TKP') cls += ' right'; else if (k === pil && s.kategori !== 'TKP') cls += ' wrong'; if (s.kategori === 'TKP' && k === ck.kunci) cls += ' right'; else if (s.kategori === 'TKP' && k === pil) cls += ' sel'; }
-    else if (k === pil) cls += ' sel';
-    return `<button class="${cls}" onclick="pick('${k}')"><b>${k}.</b><span>${esc(s.opsi[k])}</span></button>`;
+function tick() {
+  if (!E || !E.endAt) return;
+  const left = Math.max(0, Math.ceil((E.endAt - Date.now()) / 1000));
+  const el = $('#tm');
+  if (el) { el.textContent = hms(left); const pl = $('#plate'); pl.classList.toggle('warn', left <= 600 && left > 300); pl.classList.toggle('crit', left <= 300); }
+  [600, 300, 60].forEach((m) => { if (left <= m && left > m - 5 && !E.warned[m]) { E.warned[m] = 1; toast('Sisa waktu ' + (m / 60) + ' menit', true); } });
+  if (left <= 0 && !E.closing) { E.closing = true; toast('Waktu habis. Jawaban dikumpulkan otomatis.'); finishExam(true); }
+}
+function counts() {
+  let a = 0, r = 0;
+  E.soal.forEach((s) => { if (E.jawab[s.id]) a++; if (E.ragu[s.id]) r++; });
+  return { a, r, k: E.soal.length - a };
+}
+function gridHtml() {
+  let out = '', prev = '';
+  E.soal.forEach((s, n) => {
+    if (s.kategori !== prev) {
+      if (prev) out += '</div>';
+      const idx = E.soal.map((x, k) => (x.kategori === s.kategori ? k + 1 : 0)).filter(Boolean);
+      out += `<div class="gh">${s.kategori} (soal ${idx[0]} sampai ${idx[idx.length - 1]})</div><div class="gnum">`; prev = s.kategori;
+    }
+    const c = (E.ragu[s.id] ? 'rg' : E.jawab[s.id] ? 'ans' : '') + (n === E.i ? ' cur' : '');
+    out += `<button class="${c}" onclick="jump(${n})" aria-label="Soal ${n + 1}${E.jawab[s.id] ? ', terjawab' : ''}${E.ragu[s.id] ? ', ragu-ragu' : ''}">${n + 1}</button>`;
+  });
+  return out + '</div>';
+}
+function sidePanel() {
+  const c = counts();
+  return `<div class="panel"><h3>Daftar soal</h3>${gridHtml()}
+  <div class="legend"><span><i class="a"></i>Dijawab</span><span><i class="r"></i>Ragu-ragu</span><span><i></i>Belum</span></div>
+  <div style="border-top:1px solid var(--line-2);margin-top:10px;padding-top:10px"><div class="sumline"><span>Terjawab</span><b>${c.a} dari ${E.soal.length}</b></div>
+  ${E.mode === 'tryout' ? `<div class="sumline"><span>Ragu-ragu</span><b>${c.r}</b></div>` : ''}</div>
+  <button class="btn red wide" style="margin-top:10px" onclick="confirmFinish()">${E.mode === 'tryout' ? 'Akhiri ujian' : 'Selesai latihan'}</button></div>`;
+}
+function drawExam() {
+  const s = E.soal[E.i], tryout = E.mode === 'tryout', ck = E.cek[s.id], pil = E.jawab[s.id];
+  const isTkp = s.kategori === 'TKP';
+  const opts = Object.keys(s.opsi).map((k) => {
+    let cls = 'opt', badge = '';
+    if (ck) {
+      if (k === ck.kunci) cls += ' right'; else if (k === pil && !isTkp) cls += ' wrong'; else if (k === pil) cls += ' sel';
+      if (isTkp && ck.skorOpsi) badge = `<span class="sk">skor ${ck.skorOpsi[k]}</span>`;
+    } else if (k === pil) cls += ' sel';
+    return `<button class="${cls}" onclick="pick('${k}')" ${ck ? 'disabled' : ''} aria-pressed="${k === pil}"><span class="ltr">${k}</span><span>${lines(s.opsi[k])}</span>${badge}</button>`;
   }).join('');
-  const nums = Q.soal.map((x, n) => `<button class="${Q.jawab[x.id] ? 'ans' : ''} ${Q.ragu[x.id] ? 'rg' : ''} ${n === Q.i ? 'cur' : ''}" onclick="jump(${n})">${n + 1}</button>`).join('');
-  $('#app').innerHTML = `<div class="card"><div class="qhead"><div><span class="badge">${esc(s.kategori)}</span> <b>Soal ${Q.i + 1}</b> dari ${Q.soal.length}</div>
-  ${tryout ? '<div class="timer" id="tm">--:--</div>' : '<span class="mut">Mode latihan</span>'}</div>
-  <div class="qbox">${esc(s.pertanyaan).replace(/\n/g, '<br>')}</div>${opts}
-  ${ck ? `<div class="exp"><b>${s.kategori === 'TKP' ? 'Skor pilihan Anda: ' + ck.skor + ' (jawaban terbaik: ' + esc(ck.kunci) + ')' : (ck.skor === 5 ? '✅ Benar!' : '❌ Salah. Kunci: ' + esc(ck.kunci))}</b>${ck.pembahasan ? '<br>' + esc(ck.pembahasan) : ''}</div>` : ''}
-  <div class="row" style="margin-top:16px"><button class="btn sec" onclick="jump(Q.i-1)" ${Q.i === 0 ? 'disabled' : ''}>← Sebelumnya</button>
-  ${tryout ? `<button class="btn sec" onclick="toggleRagu()">${Q.ragu[s.id] ? 'Batal ragu-ragu' : 'Tandai ragu-ragu'}</button>` : ''}
-  ${Q.i < Q.soal.length - 1 ? '<button class="btn" onclick="jump(Q.i+1)">Berikutnya →</button>' : '<button class="btn" onclick="finishQuiz()">Selesai &amp; Kumpulkan</button>'}</div></div>
-  <div class="card"><b>Navigasi soal</b><div class="nums">${nums}</div>
-  <p class="mut">Biru = terjawab${tryout ? ', kuning = ragu-ragu' : ''}.</p>
-  <button class="btn red sm" onclick="finishQuiz()">Kumpulkan sekarang</button></div>`;
+  const last = E.i === E.soal.length - 1;
+  const fb = ck ? `<div class="fb ${isTkp ? '' : ck.skor === 5 ? 'ok' : 'no'}"><b>${isTkp ? 'Skor pilihan Anda: ' + ck.skor + ' dari 5. Jawaban paling tepat: ' + ck.kunci + '.' : ck.skor === 5 ? 'Jawaban Anda benar.' : 'Jawaban Anda salah. Kunci: ' + ck.kunci + '.'}</b>${ck.pembahasan ? '<br>' + lines(ck.pembahasan) : ''}</div>` : '';
+  const c = counts();
+  $('#app').innerHTML = `<div class="ex-head"><div class="in">${EMBLEM}
+    <div class="ex-title"><b>${tryout ? 'Ujian SKD CPNS, paket ' + E.paket : 'Latihan ' + esc(E.kategori)}</b><span>${esc(S.user.nama)}</span></div>
+    <span class="ex-save" id="svst" aria-live="polite">${tryout ? 'Jawaban tersimpan otomatis' : ''}</span>
+    ${tryout ? `<div class="plate" id="plate"><div class="t" id="tm">${hms(E.endAt ? (E.endAt - Date.now()) / 1000 : 0)}</div><small>Sisa waktu</small></div>` : ''}
+    <button class="btn sec xs mobgrid" onclick="openGrid()">Daftar soal ${c.a}/${E.soal.length}</button></div></div>
+  <div class="ex-main"><section class="qpanel fs${E.fs}" aria-label="Soal">
+    <div class="qhead"><div><span class="qn">Soal nomor ${E.i + 1}</span> <span class="tag">${s.kategori}</span></div>
+      <div class="fsz" role="group" aria-label="Ukuran huruf">Huruf <button class="${E.fs === 0 ? 'on' : ''}" onclick="setFs(0)" aria-label="Kecil">A</button><button class="${E.fs === 1 ? 'on' : ''}" onclick="setFs(1)" aria-label="Sedang">A</button><button class="${E.fs === 2 ? 'on' : ''}" onclick="setFs(2)" aria-label="Besar" style="font-size:17px">A</button></div></div>
+    <div class="qbody"><p class="qtext">${lines(s.pertanyaan)}</p>${opts}${fb}</div>
+    <div class="qfoot"><button class="btn sec" onclick="jump(E.i-1)" ${E.i === 0 ? 'disabled' : ''}>Sebelumnya</button>
+      ${tryout ? `<button class="ragu ${E.ragu[s.id] ? 'on' : ''}" onclick="toggleRagu()" aria-pressed="${!!E.ragu[s.id]}"><i>${E.ragu[s.id] ? '&#10003;' : ''}</i>Ragu-ragu</button>` : ''}
+      ${tryout && pil ? '<button class="clearans" onclick="clearAns()">Hapus jawaban</button>' : ''}
+      <span class="sp"></span>
+      ${last ? `<button class="btn red" onclick="confirmFinish()">${tryout ? 'Selesai ujian' : 'Selesai latihan'}</button>` : `<button class="btn pri" onclick="jump(E.i+1)">${tryout ? 'Simpan dan lanjut' : 'Berikutnya'}</button>`}</div>
+  </section><aside class="side" id="sidep">${sidePanel()}</aside></div>`;
 }
-window.jump = n => { if (n < 0 || n >= Q.soal.length) return; Q.i = n; drawQuiz(); };
-window.toggleRagu = () => { const id = Q.soal[Q.i].id; Q.ragu[id] = !Q.ragu[id]; drawQuiz(); };
-window.pick = run(async k => {
-  const s = Q.soal[Q.i];
-  if (Q.mode === 'latihan') {
-    if (Q.cek[s.id] || Q.busy) return;
-    Q.busy = true;
-    try {
-      Q.jawab[s.id] = k;
-      Q.cek[s.id] = await api('cek', { id: s.id, jawaban: k });
-    } finally { Q.busy = false; }
+function refreshSide() { const el = $('#sidep'); if (el) el.innerHTML = sidePanel(); const g = $('#gdlg'); if (g && g.isConnected) g.innerHTML = sidePanel(); const mb = document.querySelector('.mobgrid'); if (mb) mb.textContent = 'Daftar soal ' + counts().a + '/' + E.soal.length; }
+window.openGrid = () => { dlg(`<div id="gdlg">${sidePanel()}</div><div class="dlg-act"><button class="btn sec" onclick="dlgClose()">Tutup</button></div>`); };
+window.jump = (n) => { if (!E || n < 0 || n >= E.soal.length) return; E.i = n; dlgClose(); drawExam(); window.scrollTo(0, 0); };
+window.setFs = (n) => { E.fs = n; safeSet('fs', String(n)); drawExam(); };
+window.toggleRagu = () => { const id = E.soal[E.i].id; if (E.ragu[id]) delete E.ragu[id]; else E.ragu[id] = 1; changed(); drawExam(); };
+window.clearAns = () => { const id = E.soal[E.i].id; delete E.jawab[id]; changed(); drawExam(); };
+window.pick = run(async (k) => {
+  const s = E.soal[E.i];
+  if (E.mode === 'latihan') {
+    if (E.cek[s.id] || E.busy) return;
+    E.busy = true;
+    try { E.jawab[s.id] = k; E.cek[s.id] = await api('cek', { id: s.id, jawaban: k }); }
+    catch (e) { delete E.jawab[s.id]; throw e; }
+    finally { E.busy = false; }
+    drawExam();
   } else {
-    Q.jawab[s.id] = k;
+    E.jawab[s.id] = k; changed(); drawExam();
   }
-  drawQuiz();
 });
-window.finishQuiz = run(async auto => {
-  if (!window.Q) return;
-  const kosong = Q.soal.filter(s => !Q.jawab[s.id]).length;
-  if (!auto && !confirm(kosong ? `Masih ada ${kosong} soal belum dijawab. Kumpulkan sekarang?` : 'Kumpulkan jawaban sekarang?')) return;
-  clearInterval(timer); timer = null;
-  const q = Q; loading();
+function changed() {
+  if (E.mode !== 'tryout') return;
+  E.ver++; safeSet('cat_' + E.sesi, JSON.stringify({ jawab: E.jawab, ragu: E.ragu }));
+  setSave('Menyimpan…');
+  clearTimeout(E.t); E.t = setTimeout(doSave, 1200);
+}
+function setSave(t) { const el = $('#svst'); if (el) el.textContent = t; }
+async function doSave() {
+  if (!E || E.mode !== 'tryout' || E.closing) return;
+  if (E.saving) { E.t = setTimeout(doSave, 800); return; }
+  E.saving = true; const ver = E.ver, sesi = E.sesi;
   try {
-    const res = await api('submit', { sesi: q.sesi, jawaban: q.jawab });
-    window.Q = null;
-    showResult(res, q.soal);
-  } catch (e) { window.Q = q; drawQuiz(); throw e; }
+    await api('simpan', { sesi, jawab: E.jawab, ragu: E.ragu });
+    if (E && E.sesi === sesi) { E.savedVer = ver; setSave(E.ver === ver ? 'Jawaban tersimpan' : 'Menyimpan…'); }
+  } catch (e) { if (E) { setSave('Belum tersimpan, mencoba lagi…'); E.t = setTimeout(doSave, 4000); } }
+  finally { if (E) { E.saving = false; if (E.ver !== E.savedVer && !E.t) E.t = setTimeout(doSave, 500); } }
+}
+document.addEventListener('keydown', (e) => {
+  if (!E || e.ctrlKey || e.metaKey || e.altKey || $('#dlg').open) return;
+  if (/INPUT|TEXTAREA|SELECT/.test((e.target.tagName || ''))) return;
+  const k = e.key.toUpperCase();
+  if ('ABCDE'.includes(k) && k.length === 1 && E.soal[E.i].opsi[k]) { window.pick(k); }
+  else if (e.key === 'ArrowRight') window.jump(E.i + 1);
+  else if (e.key === 'ArrowLeft') window.jump(E.i - 1);
+  else if (k === 'R' && E.mode === 'tryout') window.toggleRagu();
 });
-function showResult(r, soal) {
-  const map = {}; soal.forEach(s => map[s.id] = s);
-  const tryout = r.mode === 'tryout';
-  const box = (k) => `<div class="card score"><div class="mut">${k}${tryout ? ' (min. ' + r.pg[k] + ')' : ''}</div><div class="n" style="color:${tryout ? (r[k] >= r.pg[k] ? 'var(--ok)' : 'var(--bad)') : 'var(--pri)'}">${r[k]}</div></div>`;
-  $('#app').innerHTML = `<h1>Hasil ${tryout ? 'Tryout SKD' : 'Latihan'}</h1>
-  <p class="sub">Durasi pengerjaan ${fmtDur(r.durasi)}${tryout ? ' · Status: ' + lulusBadge(r.lulus) : ''}</p>
-  <div class="grid g4">${tryout ? box('TWK') + box('TIU') + box('TKP') : ''}
-  <div class="card score"><div class="mut">Total skor</div><div class="n">${r.total}</div></div>
-  ${tryout ? '' : `<div class="card score"><div class="mut">Benar / jumlah</div><div class="n">${r.benar}/${r.jumlah}</div></div>`}</div>
-  <div class="row" style="margin-bottom:16px"><button class="btn" onclick="go('ranking')">Lihat Ranking</button><button class="btn sec" onclick="go('home')">Ke Beranda</button></div>
-  <div class="card"><h2>Pembahasan</h2>${r.review.map((v, n) => { const s = map[v.id]; if (!s) return '';
-    const ok = s.kategori === 'TKP' ? v.skor >= 4 : v.skor === 5;
-    return `<details><summary>${ok ? '✅' : '❌'} ${n + 1}. <span class="badge">${esc(s.kategori)}</span> ${esc(s.pertanyaan).slice(0, 90)}${s.pertanyaan.length > 90 ? '…' : ''}</summary>
-    <p>${esc(s.pertanyaan)}</p>${Object.keys(s.opsi).map(k => `<div>${k === v.kunci ? '✅' : (k === v.jawab ? '➖' : '•')} <b>${k}.</b> ${esc(s.opsi[k])}</div>`).join('')}
-    <div class="exp">Jawaban Anda: <b>${esc(v.jawab) || 'kosong'}</b> · Skor: <b>${v.skor}</b> · Terbaik/kunci: <b>${esc(v.kunci)}</b><br>${esc(v.pembahasan)}</div></details>`; }).join('')}</div>`;
+window.addEventListener('beforeunload', (e) => { if (E && E.mode === 'tryout') { e.preventDefault(); e.returnValue = ''; } });
+
+window.confirmFinish = () => {
+  const c = counts();
+  dlg(`<h2>${E.mode === 'tryout' ? 'Akhiri ujian?' : 'Selesai latihan?'}</h2>
+  <p class="mut">${E.mode === 'tryout' ? 'Setelah dikumpulkan, jawaban tidak bisa diubah.' : 'Hasil latihan akan disimpan di riwayat.'}</p>
+  <div class="kv" style="margin:12px 0 0"><div>Soal terjawab</div><div>${c.a} dari ${E.soal.length}</div><div>Belum dijawab</div><div>${c.k}</div>${E.mode === 'tryout' ? `<div>Ditandai ragu-ragu</div><div>${c.r}</div>` : ''}</div>
+  ${c.k || c.r ? '<p class="sm" style="margin-top:10px;color:var(--amber-ink)">Masih ada soal yang belum dijawab atau ditandai ragu-ragu.</p>' : ''}
+  <div class="dlg-act"><button class="btn sec" onclick="dlgClose()">Kembali ke soal</button><button class="btn red" id="finBtn" onclick="finishExam()">Ya, kumpulkan jawaban</button></div>`);
+};
+window.finishExam = run(async (auto) => {
+  if (!E) return;
+  const b = $('#finBtn'); if (b) b.disabled = true;
+  clearTimeout(E.t); E.closing = true;
+  const q = E;
+  dlgClose();
+  const ov = document.createElement('div'); ov.className = 'ldg'; ov.id = 'ldg'; ov.textContent = 'Menilai jawaban…'; document.body.appendChild(ov);
+  try {
+    const d = await api('submit', { sesi: q.sesi, jawaban: q.jawab });
+    stopClock(); safeDel('cat_' + q.sesi); E = null;
+    document.body.classList.remove('exam');
+    showResult(d, false);
+  } catch (e) { q.closing = false; if (q.endAt && q.endAt - Date.now() <= 0) { q.closing = false; } drawExam(); throw e; }
+  finally { const o = $('#ldg'); if (o) o.remove(); }
+});
+
+/* ========= HASIL & PEMBAHASAN ========= */
+let RV = { d: null, f: 'semua' };
+function statusOf(s) { if (!s.jawab) return 'kosong'; return s.skor === 5 ? 'benar' : 'salah'; }
+function showResult(d, fromHistory) {
+  RV = { d, f: 'semua' };
+  document.body.classList.remove('exam'); drawTop();
+  const h = d.hasil, tryout = h.mode === 'tryout';
+  const box = (k) => {
+    const mk = d.maks[k] || 0, pg = d.pg[k], v = h[k], ok = v >= pg;
+    return `<div class="sc"><div class="mut sm">${k}${tryout ? ', passing grade ' + pg : ''}</div><div class="n" style="color:${tryout ? (ok ? 'var(--green)' : 'var(--red)') : 'var(--ink)'}">${v}<small> / ${mk}</small></div>
+    <div class="bar"><i class="${tryout ? (ok ? 'ok' : 'bad') : ''}" style="width:${mk ? Math.round(v / mk * 100) : 0}%"></i>${tryout && mk ? `<u style="left:${Math.round(pg / mk * 100)}%" title="Passing grade"></u>` : ''}</div>
+    <div class="sm mut">${tryout ? (ok ? 'Memenuhi passing grade' : 'Kurang ' + (pg - v) + ' poin dari passing grade') : ''}</div></div>`;
+  };
+  const cats = tryout ? ['TWK', 'TIU', 'TKP'] : ['TWK', 'TIU', 'TKP'].filter((k) => d.maks[k] > 0);
+  $('#app').innerHTML = `<div class="page-h"><div><h1>${tryout ? 'Hasil tryout ' + paketName(h.paket) : 'Hasil latihan ' + esc(h.kategori)}</h1><p>${esc(h.nama)} · ${esc(h.waktu.slice(0, 16))} · durasi ${fmtDur(h.durasi_detik)}</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sec" onclick="go('${S.user.role === 'admin' ? 'adminHasil' : 'home'}')">${fromHistory ? 'Kembali' : 'Ke beranda'}</button>${tryout ? '<button class="btn pri" onclick="go(\'ranking\')">Lihat peringkat</button>' : '<button class="btn pri" onclick="go(\'latihan\')">Latihan lagi</button>'}</div></div>
+  <div class="verdict ${tryout ? (h.lulus === 'LULUS' ? 'ok' : 'bad') : ''}"><div><div class="mut sm">${tryout ? 'Status passing grade' : 'Skor latihan'}</div>
+    <div style="font-size:22px;font-weight:600">${tryout ? (h.lulus === 'LULUS' ? 'Lulus passing grade' : 'Belum lulus passing grade') : h.benar + ' benar dari ' + (h.benar + h.salah + h.kosong) + ' soal'}</div></div>
+    <div style="text-align:right"><div class="mut sm">Skor total</div><div class="big">${h.total}<small class="mut" style="font-size:16px;font-weight:400"> / ${Object.values(d.maks).reduce((a, b) => a + b, 0)}</small></div></div></div>
+  <div class="sc3">${cats.map(box).join('')}</div>
+  <div class="facts"><div><div class="v">${h.benar}</div><div class="l">Benar (TWK dan TIU)</div></div><div><div class="v">${h.salah}</div><div class="l">Salah (TWK dan TIU)</div></div><div><div class="v">${h.kosong}</div><div class="l">Tidak dijawab</div></div><div><div class="v">${fmtDur(h.durasi_detik)}</div><div class="l">Waktu pengerjaan</div></div></div>
+  <div class="panel"><h2>Pembahasan soal</h2><div class="filters" id="rvf"></div><div id="rvl"></div></div>`;
+  drawReview();
+}
+function drawReview() {
+  const { d, f } = RV;
+  const fl = [['semua', 'Semua'], ['benar', 'Skor penuh'], ['salah', 'Belum penuh'], ['kosong', 'Kosong'], ['TWK', 'TWK'], ['TIU', 'TIU'], ['TKP', 'TKP']];
+  $('#rvf').innerHTML = fl.map((x) => `<button class="${f === x[0] ? 'on' : ''}" onclick="RV.f='${x[0]}';drawReview()">${x[1]}</button>`).join('') + '<button onclick="document.querySelectorAll(\'#rvl details\').forEach(e=>e.open=!e.open)" style="margin-left:auto">Buka atau tutup semua</button>';
+  const list = d.soal.filter((s) => f === 'semua' || (['benar', 'salah', 'kosong'].includes(f) ? statusOf(s) === f : s.kategori === f));
+  $('#rvl').innerHTML = list.map((s) => {
+    const st = statusOf(s), tkp = s.kategori === 'TKP';
+    const mk = st === 'kosong' ? ['kosong', '-'] : st === 'benar' ? ['ok', '&#10003;'] : tkp ? ['mid', String(s.skor)] : ['no', '&#10005;'];
+    const opts = Object.keys(s.opsi).map((k) => {
+      let cls = 'opt'; if (k === s.kunci) cls += ' right'; else if (k === s.jawab) cls += tkp ? ' sel' : ' wrong';
+      return `<div class="${cls}"><span class="ltr">${k}</span><span>${lines(s.opsi[k])}</span>${tkp && s.skorOpsi ? `<span class="sk">skor ${s.skorOpsi[k]}</span>` : ''}</div>`;
+    }).join('');
+    return `<details class="rv"><summary><span class="mk ${mk[0]}">${mk[1]}</span><span class="tag">${s.kategori || '-'}</span><span class="tt">${s.no}. ${esc(s.pertanyaan)}</span></summary>
+      <div class="bd"><p>${lines(s.pertanyaan)}</p>${opts}<div class="fb ${st === 'benar' ? 'ok' : st === 'kosong' ? '' : 'no'}"><b>Jawaban Anda: ${s.jawab || 'kosong'}. ${tkp ? 'Skor ' + s.skor + ' dari 5. Paling tepat: ' + s.kunci + '.' : 'Kunci: ' + s.kunci + '.'}</b>${s.pembahasan ? '<br>' + lines(s.pembahasan) : ''}</div></div></details>`;
+  }).join('') || '<div class="empty">Tidak ada soal pada filter ini.</div>';
 }
 
+/* ========= PERINGKAT ========= */
+let RK = { data: null, tab: 'ALL' };
 views.ranking = async () => {
   loading();
-  const rk = await api('ranking');
-  const admin = S.user.role === 'admin';
-  $('#app').innerHTML = `<h1>🏆 Peringkat Tryout SKD</h1><p class="sub">Diperbarui otomatis setiap ada yang menyelesaikan tryout. Memakai skor terbaik tiap peserta.</p>
-  <div class="card tw">${rk.length ? `<table><tr><th>#</th><th>Nama</th>${admin ? '<th>Username</th>' : ''}<th>TWK</th><th>TIU</th><th>TKP</th><th>Total</th><th>Status</th><th>Percobaan</th></tr>
-  ${rk.map(r => `<tr class="${r.saya ? 'me' : ''}"><td><b>${r.peringkat <= 3 ? ['🥇', '🥈', '🥉'][r.peringkat - 1] : r.peringkat}</b></td><td>${esc(r.nama)}${r.saya ? ' <span class="badge warn">Anda</span>' : ''}</td>${admin ? `<td>${esc(r.username)}</td>` : ''}<td>${r.TWK}</td><td>${r.TIU}</td><td>${r.TKP}</td><td><b>${r.total}</b></td><td>${lulusBadge(r.lulus)}</td><td>${r.percobaan}</td></tr>`).join('')}</table>` : '<p class="mut">Belum ada peserta yang menyelesaikan tryout.</p>'}</div>`;
+  RK.data = await api('ranking'); if (!RK.data[RK.tab]) RK.tab = 'ALL';
+  drawRanking();
 };
+function drawRanking() {
+  const admin = S.user.role === 'admin', keys = Object.keys(RK.data), list = RK.data[RK.tab] || [];
+  const top = list.slice(0, 3);
+  $('#app').innerHTML = `<div class="page-h"><div><h1>Peringkat tryout</h1><p>Diperbarui otomatis setiap ada peserta menyelesaikan tryout. Skor terbaik tiap peserta yang dipakai.</p></div></div>
+  <div class="tabs" role="tablist">${keys.map((k) => `<button role="tab" class="${RK.tab === k ? 'on' : ''}" onclick="RK.tab='${k}';drawRanking()">${k === 'ALL' ? 'Semua paket' : 'Paket ' + k}</button>`).join('')}</div>
+  ${list.length ? `<div class="podium">${top.map((r) => `<div class="pod p${r.peringkat}"><div class="rk">Peringkat ${r.peringkat}</div><div class="nm">${esc(r.nama)}</div><div class="pt">${r.total}</div><div class="sm mut">TWK ${r.TWK} · TIU ${r.TIU} · TKP ${r.TKP}</div></div>`).join('')}</div>
+  <div class="panel tw" style="padding:0"><table><tr><th class="num">#</th><th>Nama</th>${admin ? '<th>Username</th>' : ''}${RK.tab === 'ALL' ? '<th>Paket</th>' : ''}<th class="num">TWK</th><th class="num">TIU</th><th class="num">TKP</th><th class="num">Total</th><th>Status</th><th class="num">Percobaan</th></tr>
+  ${list.map((r) => `<tr class="${r.saya ? 'me' : ''}"><td class="num"><b>${r.peringkat}</b></td><td>${esc(r.nama)}${r.saya ? ' <span class="tag warn">Anda</span>' : ''}</td>${admin ? `<td>${esc(r.username)}</td>` : ''}${RK.tab === 'ALL' ? `<td>${r.paket}</td>` : ''}<td class="num">${r.TWK}</td><td class="num">${r.TIU}</td><td class="num">${r.TKP}</td><td class="num"><b>${r.total}</b></td><td>${statusTag(r.lulus)}</td><td class="num">${r.percobaan}</td></tr>`).join('')}</table></div>`
+  : '<div class="panel empty">Belum ada peserta yang menyelesaikan tryout pada kelompok ini.</div>'}`;
+}
 
 /* ========= ADMIN ========= */
 views.adminHome = async () => {
   loading();
   const s = await api('stats');
-  $('#app').innerHTML = `<h1>Dashboard Admin</h1><p class="sub">Semua data tersimpan di Google Spreadsheet Anda.</p>
-  <div class="grid g4">
-  <div class="card stat"><div class="n">${s.totalSoal}</div><div class="l">Total soal (TWK ${s.soal.TWK} · TIU ${s.soal.TIU} · TKP ${s.soal.TKP})</div></div>
-  <div class="card stat"><div class="n">${s.member}</div><div class="l">Member terdaftar</div></div>
-  <div class="card stat"><div class="n">${s.tryout}</div><div class="l">Tryout selesai</div></div>
-  <div class="card stat"><div class="n">${s.latihan}</div><div class="l">Sesi latihan</div></div></div>
-  <div class="card"><h2>Google Spreadsheet</h2><p>Sheet <b>Users</b>, <b>Soal</b>, <b>Hasil</b>, <b>Ranking</b>, dan <b>Config</b> bisa dibuka dan diedit langsung. Sheet Ranking ikut diperbarui otomatis.</p>
-  <a class="btn" href="${esc(s.url)}" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Buka Spreadsheet ↗</a></div>`;
+  const rowsP = Object.keys(s.paket).map(Number).sort((a, b) => a - b).map((p) => {
+    const c = s.paket[p], ok = c.TWK >= s.perlu.TWK && c.TIU >= s.perlu.TIU && c.TKP >= s.perlu.TKP;
+    return `<tr><td>${paketName(p)}</td><td class="num">${c.TWK} / ${s.perlu.TWK}</td><td class="num">${c.TIU} / ${s.perlu.TIU}</td><td class="num">${c.TKP} / ${s.perlu.TKP}</td><td>${ok ? '<span class="tag ok">Lengkap</span>' : '<span class="tag warn">Belum lengkap</span>'}</td></tr>`;
+  }).join('');
+  $('#app').innerHTML = `${S.user.passwordDefault ? '<div class="notice"><span>Password admin masih bawaan (admin123). Segera ganti agar akun tidak mudah dimasuki.</span><button class="btn xs" onclick="vPassword()">Ganti password</button></div>' : ''}
+  <div class="page-h"><div><h1>Ringkasan admin</h1><p>Semua data tersimpan di Google Spreadsheet Anda.</p></div><a class="btn sec" href="${esc(s.url)}" target="_blank" rel="noopener" style="text-decoration:none">Buka spreadsheet</a></div>
+  <div class="facts"><div><div class="v">${s.totalSoal}</div><div class="l">Total soal</div></div><div><div class="v">${s.member}</div><div class="l">Peserta terdaftar</div></div><div><div class="v">${s.tryout}</div><div class="l">Tryout selesai</div></div><div><div class="v">${s.latihan}</div><div class="l">Sesi latihan</div></div></div>
+  <div class="panel tw"><h2>Kelengkapan bank soal</h2><table><tr><th>Set</th><th class="num">TWK</th><th class="num">TIU</th><th class="num">TKP</th><th>Status</th></tr>${rowsP}</table>
+  <p class="sm mut" style="margin:12px 0 0">Paket 1 sampai 5 dipakai untuk tryout. Paket 0 adalah bank latihan. Tryout mengambil soal sesuai jumlah per kategori di menu Pengaturan.</p></div>`;
 };
 
-let ADM = { soal: [] };
+let ADM = { page: 1, paket: '', kategori: '', q: '', items: [], total: 0, per: 40 };
 views.adminSoal = async () => {
-  loading();
-  ADM.soal = await api('listSoal');
-  $('#app').innerHTML = `<div class="qhead"><div><h1>Bank Soal</h1><p class="sub">Tambah, ubah, hapus, atau impor soal massal.</p></div>
-  <div style="display:flex;gap:8px"><button class="btn" onclick="formSoal()">+ Tambah Soal</button><button class="btn sec" onclick="formImport()">Impor Massal</button></div></div>
-  <div class="card"><div class="row"><div><label>Cari</label><input id="fq" oninput="tblSoal()" placeholder="kata kunci pertanyaan"></div>
-  <div><label>Kategori</label><select id="fk" onchange="tblSoal()"><option value="">Semua</option><option>TWK</option><option>TIU</option><option>TKP</option></select></div></div></div>
-  <div class="card tw" id="tbs"></div>`;
-  tblSoal();
+  $('#app').innerHTML = `<div class="page-h"><div><h1>Bank soal</h1><p>Tambah, ubah, hapus, atau impor soal dari Google Sheets.</p></div>
+  <div style="display:flex;gap:8px"><button class="btn" onclick="formSoal()">Tambah soal</button><button class="btn sec" onclick="formImport()">Impor massal</button></div></div>
+  <div class="panel"><div class="row"><div><label for="fp">Set soal</label><select id="fp" onchange="admFilter()"><option value="">Semua</option><option value="0">Latihan (paket 0)</option>${[1, 2, 3, 4, 5].map((p) => `<option value="${p}">Paket ${p}</option>`).join('')}</select></div>
+  <div><label for="fk">Kategori</label><select id="fk" onchange="admFilter()"><option value="">Semua</option><option>TWK</option><option>TIU</option><option>TKP</option></select></div>
+  <div style="flex:2"><label for="fq">Cari kata dalam pertanyaan</label><input id="fq" onkeydown="if(event.key==='Enter')admFilter()" placeholder="ketik lalu tekan Enter"></div></div></div>
+  <div class="panel tw" id="tbs" style="padding:0"></div>`;
+  $('#fp').value = ADM.paket; $('#fk').value = ADM.kategori; $('#fq').value = ADM.q;
+  await loadSoal();
 };
-window.tblSoal = () => {
-  const q = ($('#fq').value || '').toLowerCase(), k = $('#fk').value;
-  const L = ADM.soal.filter(s => (!k || s.kategori.toUpperCase() === k) && (!q || s.pertanyaan.toLowerCase().includes(q)));
-  $('#tbs').innerHTML = `<p class="mut">${L.length} soal</p><table><tr><th>Kat</th><th>Pertanyaan</th><th>Kunci</th><th></th></tr>` +
-    L.map(s => `<tr><td><span class="badge">${esc(s.kategori)}</span></td><td>${esc(s.pertanyaan).slice(0, 140)}</td><td>${s.kategori.toUpperCase() === 'TKP' ? 'skor' : esc(s.kunci)}</td>
-    <td style="white-space:nowrap"><button class="btn sm sec" onclick="formSoal('${s.id}')">Ubah</button> <button class="btn sm red" onclick="hapusSoal('${s.id}')">Hapus</button></td></tr>`).join('') + '</table>';
-};
-window.formSoal = id => {
-  const s = ADM.soal.find(x => x.id === id) || { kategori: 'TWK' };
+window.admFilter = () => { ADM.paket = $('#fp').value; ADM.kategori = $('#fk').value; ADM.q = $('#fq').value.trim(); ADM.page = 1; run(loadSoal)(); };
+async function loadSoal() {
+  const r = await api('listSoal', { paket: ADM.paket, kategori: ADM.kategori, q: ADM.q, page: ADM.page });
+  ADM.items = r.items; ADM.total = r.total; ADM.per = r.per;
+  const pages = Math.max(1, Math.ceil(r.total / r.per));
+  $('#tbs').innerHTML = `<table><tr><th>Set</th><th>No</th><th>Kat</th><th>Pertanyaan</th><th>Kunci</th><th></th></tr>` +
+    (r.items.map((s) => `<tr><td class="nowrap">${paketName(s.paket)}</td><td>${esc(s.no)}</td><td><span class="tag">${esc(s.kategori)}</span></td><td>${esc(s.pertanyaan).slice(0, 150)}${s.pertanyaan.length > 150 ? '…' : ''}</td>
+    <td>${s.kategori === 'TKP' ? 'skor' : esc(s.kunci)}</td><td class="nowrap"><button class="btn xs sec" onclick="formSoal('${esc(s.id)}')">Ubah</button> <button class="btn xs red" onclick="hapusSoal('${esc(s.id)}')">Hapus</button></td></tr>`).join('') || '<tr><td colspan="6" class="empty">Tidak ada soal.</td></tr>') +
+    `</table><div class="pager" style="padding:0 14px 12px"><span class="sm mut">${r.total} soal · halaman ${r.page} dari ${pages}</span>
+    <button class="btn xs sec" ${r.page <= 1 ? 'disabled' : ''} onclick="ADM.page--;run(loadSoal)()">Sebelumnya</button><button class="btn xs sec" ${r.page >= pages ? 'disabled' : ''} onclick="ADM.page++;run(loadSoal)()">Berikutnya</button></div>`;
+}
+window.formSoal = (id) => {
+  const s = ADM.items.find((x) => x.id === id) || { kategori: 'TWK', paket: ADM.paket === '' ? '1' : ADM.paket, kunci: 'A' };
   const O = ['A', 'B', 'C', 'D', 'E'];
-  dlg(`<h2>${id ? 'Ubah' : 'Tambah'} Soal</h2>
-  <label>Kategori</label><select id="f_kat" onchange="togKat()"><option ${s.kategori === 'TWK' ? 'selected' : ''}>TWK</option><option ${s.kategori === 'TIU' ? 'selected' : ''}>TIU</option><option ${s.kategori === 'TKP' ? 'selected' : ''}>TKP</option></select>
-  <label>Pertanyaan</label><textarea id="f_q">${esc(s.pertanyaan || '')}</textarea>
-  ${O.map(k => `<div class="row"><div style="flex:4"><label>Opsi ${k}</label><input id="f_${k}" value="${esc(s[k] || '')}"></div>
-  <div class="skor" style="flex:1"><label>Skor ${k} (1-5)</label><input id="f_s${k}" type="number" min="1" max="5" value="${esc(s['skor' + k] || '')}"></div></div>`).join('')}
-  <div id="kunciBox"><label>Kunci jawaban</label><select id="f_kunci">${O.map(k => `<option ${String(s.kunci).toUpperCase() === k ? 'selected' : ''}>${k}</option>`).join('')}</select></div>
-  <label>Pembahasan</label><textarea id="f_p">${esc(s.pembahasan || '')}</textarea>
-  <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end"><button class="btn sec" onclick="dlgClose()">Batal</button>
-  <button class="btn" onclick="simpanSoal('${id || ''}')">Simpan</button></div>`);
+  dlg(`<h2>${id ? 'Ubah soal' : 'Tambah soal'}</h2>
+  <div class="row"><div><label for="f_paket">Set soal (0 = latihan, 1 sampai 5 = tryout)</label><input id="f_paket" type="number" min="0" max="20" value="${esc(s.paket)}"></div>
+  <div><label for="f_kat">Kategori</label><select id="f_kat" onchange="togKat()">${['TWK', 'TIU', 'TKP'].map((k) => `<option ${s.kategori === k ? 'selected' : ''}>${k}</option>`).join('')}</select></div></div>
+  <label for="f_topik">Topik (opsional)</label><input id="f_topik" value="${esc(s.topik || '')}">
+  <label for="f_q">Pertanyaan</label><textarea id="f_q">${esc(s.pertanyaan || '')}</textarea>
+  <label>Pilihan jawaban (kosongkan opsi yang tidak dipakai)</label>
+  ${O.map((k) => `<div class="optrow" style="margin-bottom:6px"><span class="ltr">${k}</span><input class="t" id="f_${k}" value="${esc(s[k] || '')}" aria-label="Opsi ${k}">
+  <select class="s skor" id="f_s${k}" aria-label="Skor opsi ${k}"><option value="">Skor</option>${[1, 2, 3, 4, 5].map((n) => `<option ${String(s['skor' + k]) === String(n) ? 'selected' : ''}>${n}</option>`).join('')}</select>
+  <label class="k kunci" style="margin:0;font-weight:400"><input type="radio" name="kunci" value="${k}" ${String(s.kunci).toUpperCase() === k ? 'checked' : ''}> kunci</label></div>`).join('')}
+  <label for="f_p">Pembahasan</label><textarea id="f_p">${esc(s.pembahasan || '')}</textarea>
+  <div class="dlg-act"><button class="btn sec" onclick="dlgClose()">Batal</button><button class="btn pri" onclick="simpanSoal('${id || ''}')">Simpan soal</button></div>`);
   togKat();
 };
 window.togKat = () => {
   const tkp = $('#f_kat').value === 'TKP';
-  document.querySelectorAll('.skor').forEach(e => e.style.display = tkp ? '' : 'none');
-  $('#kunciBox').style.display = tkp ? 'none' : '';
+  document.querySelectorAll('#dlg .skor').forEach((e) => { e.style.display = tkp ? '' : 'none'; });
+  document.querySelectorAll('#dlg .kunci').forEach((e) => { e.style.display = tkp ? 'none' : ''; });
 };
-window.simpanSoal = run(async id => {
-  const d = { id: id || '', kategori: $('#f_kat').value, pertanyaan: $('#f_q').value, kunci: $('#f_kunci').value, pembahasan: $('#f_p').value };
-  ['A', 'B', 'C', 'D', 'E'].forEach(k => { d[k] = $('#f_' + k).value; d['skor' + k] = $('#f_s' + k).value; });
-  await api('simpanSoal', d); dlgClose(); toast('Soal disimpan'); views.adminSoal();
+window.simpanSoal = run(async (id) => {
+  const d = { id, paket: $('#f_paket').value, kategori: $('#f_kat').value, topik: $('#f_topik').value, pertanyaan: $('#f_q').value, pembahasan: $('#f_p').value };
+  const kr = document.querySelector('#dlg input[name=kunci]:checked'); d.kunci = kr ? kr.value : '';
+  ['A', 'B', 'C', 'D', 'E'].forEach((k) => { d[k] = $('#f_' + k).value; d['skor' + k] = $('#f_s' + k).value; });
+  await api('simpanSoal', d); dlgClose(); toast('Soal disimpan'); await loadSoal();
 });
-window.hapusSoal = run(async id => { if (!confirm('Hapus soal ini?')) return; await api('hapusSoal', { id }); toast('Soal dihapus'); views.adminSoal(); });
-window.formImport = () => dlg(`<h2>Impor Soal Massal</h2>
-  <p class="mut">Salin dari Google Sheets lalu tempel di bawah. Urutan kolom (tanpa judul kolom juga boleh):<br>
-  <code>kategori, pertanyaan, A, B, C, D, E, kunci, skorA, skorB, skorC, skorD, skorE, pembahasan</code><br>
-  TWK/TIU isi kolom kunci. TKP isi skor 1-5 tiap opsi dan kosongkan kunci.</p>
-  <textarea id="imp" style="min-height:200px" placeholder="Tempel di sini..."></textarea>
-  <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end"><button class="btn sec" onclick="dlgClose()">Batal</button><button class="btn" onclick="doImport()">Impor</button></div>`);
+window.hapusSoal = run(async (id) => { if (!confirm('Hapus soal ini? Riwayat hasil lama tetap tersimpan.')) return; await api('hapusSoal', { id }); toast('Soal dihapus'); await loadSoal(); });
+window.formImport = () => dlg(`<h2>Impor soal massal</h2>
+  <p class="mut sm">Salin baris dari Google Sheets lalu tempel di bawah. Urutan kolom (judul kolom boleh disertakan):</p>
+  <p class="sm"><code>paket, kategori, topik, pertanyaan, A, B, C, D, E, kunci, skorA, skorB, skorC, skorD, skorE, pembahasan</code></p>
+  <p class="mut sm">TWK dan TIU mengisi kolom kunci. TKP mengisi skor 1 sampai 5 tiap opsi dan mengosongkan kunci. Nomor urut dibuat otomatis.</p>
+  <textarea id="imp" style="min-height:200px" placeholder="Tempel di sini"></textarea>
+  <div class="dlg-act"><button class="btn sec" onclick="dlgClose()">Batal</button><button class="btn pri" onclick="doImport()">Impor</button></div>`);
 window.doImport = run(async () => {
-  const keys = ['kategori', 'pertanyaan', 'A', 'B', 'C', 'D', 'E', 'kunci', 'skorA', 'skorB', 'skorC', 'skorD', 'skorE', 'pembahasan'];
-  const lines = $('#imp').value.split(/\r?\n/).filter(l => l.trim());
-  const items = lines.map(l => l.split('\t')).filter(c => c[0].trim().toLowerCase() !== 'kategori')
-    .map(c => { const o = {}; keys.forEach((k, i) => o[k] = (c[i] || '').trim()); return o; });
-  if (!items.length) return toast('Tidak ada data', true);
+  const keys = ['paket', 'kategori', 'topik', 'pertanyaan', 'A', 'B', 'C', 'D', 'E', 'kunci', 'skorA', 'skorB', 'skorC', 'skorD', 'skorE', 'pembahasan'];
+  const items = $('#imp').value.split(/\r?\n/).filter((l) => l.trim()).map((l) => l.split('\t')).filter((c) => c[0].trim().toLowerCase() !== 'paket')
+    .map((c) => { const o = {}; keys.forEach((k, i) => { o[k] = (c[i] || '').trim(); }); return o; });
+  if (!items.length) return toast('Tidak ada baris untuk diimpor', true);
   const r = await api('importSoal', { items });
-  dlgClose();
-  toast(`${r.berhasil} soal diimpor` + (r.errors.length ? `, ${r.errors.length} gagal` : ''), r.errors.length > 0);
-  if (r.errors.length) alert('Baris gagal:\n' + r.errors.slice(0, 15).join('\n'));
-  views.adminSoal();
+  dlgClose(); toast(r.berhasil + ' soal diimpor' + (r.errors.length ? ', ' + r.errors.length + ' gagal' : ''), r.errors.length > 0);
+  if (r.errors.length) alert('Baris yang gagal:\n' + r.errors.slice(0, 15).join('\n'));
+  await loadSoal();
 });
 
 views.adminUser = async () => {
   loading();
-  const L = await api('listUser');
-  window.USERS = L;
-  $('#app').innerHTML = `<div class="qhead"><div><h1>Pengguna</h1><p class="sub">Kelola akun admin dan member.</p></div><button class="btn" onclick="formUser()">+ Tambah Pengguna</button></div>
-  <div class="card tw"><table><tr><th>Username</th><th>Nama</th><th>Role</th><th>Dibuat</th><th></th></tr>
-  ${L.map(u => `<tr><td>${esc(u.username)}</td><td>${esc(u.nama)}</td><td><span class="badge ${u.role === 'admin' ? 'warn' : ''}">${esc(u.role)}</span></td><td>${esc(u.dibuat)}</td>
-  <td style="white-space:nowrap"><button class="btn sm sec" onclick="formUser('${esc(u.username)}')">Ubah</button> <button class="btn sm red" onclick="hapusUser('${esc(u.username)}')">Hapus</button></td></tr>`).join('')}</table></div>`;
+  const L = await api('listUser'); window.USERS = L;
+  $('#app').innerHTML = `<div class="page-h"><div><h1>Pengguna</h1><p>Kelola akun admin dan peserta.</p></div><button class="btn" onclick="formUser()">Tambah pengguna</button></div>
+  <div class="panel tw" style="padding:0"><table><tr><th>Username</th><th>Nama</th><th>Peran</th><th>Dibuat</th><th></th></tr>
+  ${L.map((u) => `<tr><td>${esc(u.username)}</td><td>${esc(u.nama)}</td><td><span class="tag ${u.role === 'admin' ? 'warn' : ''}">${esc(u.role)}</span></td><td class="nowrap">${esc(u.dibuat.slice(0, 16))}</td>
+  <td class="nowrap"><button class="btn xs sec" onclick="formUser('${esc(u.username)}')">Ubah</button> <button class="btn xs red" onclick="hapusUser('${esc(u.username)}')">Hapus</button></td></tr>`).join('')}</table></div>`;
 };
-window.formUser = un => {
-  const u = (window.USERS || []).find(x => x.username === un) || { role: 'member' };
-  dlg(`<h2>${un ? 'Ubah' : 'Tambah'} Pengguna</h2>
-  <label>Username</label><input id="u_u" value="${esc(u.username || '')}" ${un ? 'disabled' : ''}>
-  <label>Nama</label><input id="u_n" value="${esc(u.nama || '')}">
-  <label>Role</label><select id="u_r"><option value="member" ${u.role === 'member' ? 'selected' : ''}>member</option><option value="admin" ${u.role === 'admin' ? 'selected' : ''}>admin</option></select>
-  <label>${un ? 'Password baru (kosongkan jika tidak diubah)' : 'Password (min. 6 karakter)'}</label><input id="u_p" type="password">
-  <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end"><button class="btn sec" onclick="dlgClose()">Batal</button>
-  <button class="btn" onclick="simpanUser(${un ? 'false' : 'true'})">Simpan</button></div>`);
+window.formUser = (un) => {
+  const u = (window.USERS || []).find((x) => x.username === un) || { role: 'member' };
+  dlg(`<h2>${un ? 'Ubah pengguna' : 'Tambah pengguna'}</h2>
+  <label for="u_u">Username</label><input id="u_u" value="${esc(u.username || '')}" ${un ? 'disabled' : ''}>
+  <label for="u_n">Nama</label><input id="u_n" value="${esc(u.nama || '')}">
+  <label for="u_r">Peran</label><select id="u_r"><option value="member" ${u.role === 'member' ? 'selected' : ''}>member</option><option value="admin" ${u.role === 'admin' ? 'selected' : ''}>admin</option></select>
+  <label for="u_p">${un ? 'Password baru (kosongkan jika tidak diubah)' : 'Password (minimal 6 karakter)'}</label><input id="u_p" type="password" autocomplete="new-password">
+  <div class="dlg-act"><button class="btn sec" onclick="dlgClose()">Batal</button><button class="btn pri" onclick="simpanUser(${un ? 'false' : 'true'})">Simpan pengguna</button></div>`);
 };
-window.simpanUser = run(async baru => {
+window.simpanUser = run(async (baru) => {
   await api('simpanUser', { baru, username: $('#u_u').value.trim(), nama: $('#u_n').value.trim(), role: $('#u_r').value, password: $('#u_p').value });
   dlgClose(); toast('Pengguna disimpan'); views.adminUser();
 });
-window.hapusUser = run(async un => { if (!confirm('Hapus pengguna ' + un + '?')) return; await api('hapusUser', { username: un }); toast('Dihapus'); views.adminUser(); });
+window.hapusUser = run(async (un) => { if (!confirm('Hapus pengguna ' + un + '?')) return; await api('hapusUser', { username: un }); toast('Pengguna dihapus'); views.adminUser(); });
 
+let HF = { paket: '', mode: '' };
 views.adminHasil = async () => {
   loading();
-  const L = await api('listHasil');
-  $('#app').innerHTML = `<div class="qhead"><div><h1>Hasil Tes</h1><p class="sub">Seluruh riwayat tryout dan latihan peserta.</p></div>
-  <div style="display:flex;gap:8px"><button class="btn sec" onclick="go('ranking')">Lihat Ranking</button><button class="btn" onclick="rebuild()">Perbarui Sheet Ranking</button></div></div>
-  <div class="card tw"><table><tr><th>Waktu</th><th>Nama</th><th>Jenis</th><th>TWK</th><th>TIU</th><th>TKP</th><th>Total</th><th>Durasi</th><th>Status</th></tr>
-  ${L.map(r => `<tr><td>${esc(r.waktu)}</td><td>${esc(r.nama)}<br><span class="mut">${esc(r.username)}</span></td><td>${r.mode === 'tryout' ? 'Tryout' : 'Latihan ' + esc(r.kategori)}</td><td>${r.TWK}</td><td>${r.TIU}</td><td>${r.TKP}</td><td><b>${r.total}</b></td><td>${fmtDur(r.durasi_detik)}</td><td>${lulusBadge(r.lulus)}</td></tr>`).join('') || '<tr><td colspan="9" class="mut">Belum ada data</td></tr>'}</table></div>`;
+  const L = await api('listHasil', HF);
+  $('#app').innerHTML = `<div class="page-h"><div><h1>Hasil tes</h1><p>Riwayat tryout dan latihan semua peserta (500 terbaru).</p></div><button class="btn" onclick="rebuild()">Perbarui sheet Ranking</button></div>
+  <div class="panel"><div class="row"><div><label for="hp">Set soal</label><select id="hp" onchange="hFilter()"><option value="">Semua</option>${[0, 1, 2, 3, 4, 5].map((p) => `<option value="${p}">${paketName(p)}</option>`).join('')}</select></div>
+  <div><label for="hm">Jenis</label><select id="hm" onchange="hFilter()"><option value="">Semua</option><option value="tryout">Tryout</option><option value="latihan">Latihan</option></select></div></div></div>
+  <div class="panel tw" style="padding:0"><table><tr><th>Waktu</th><th>Peserta</th><th>Jenis</th><th class="num">TWK</th><th class="num">TIU</th><th class="num">TKP</th><th class="num">Total</th><th>Durasi</th><th>Status</th><th></th></tr>
+  ${L.map((r) => `<tr><td class="nowrap">${esc(r.waktu.slice(0, 16))}</td><td>${esc(r.nama)}<br><span class="mut sm">${esc(r.username)}</span></td><td>${jenis(r)}</td><td class="num">${r.TWK}</td><td class="num">${r.TIU}</td><td class="num">${r.TKP}</td><td class="num"><b>${r.total}</b></td><td class="nowrap">${fmtDur(r.durasi_detik)}</td><td>${statusTag(r.lulus)}</td>
+  <td class="nowrap"><button class="btn xs sec" onclick="lihatDetail('${esc(r.id)}')">Detail</button> <button class="btn xs red" onclick="hapusHasil('${esc(r.id)}')">Hapus</button></td></tr>`).join('') || '<tr><td colspan="10" class="empty">Belum ada data.</td></tr>'}</table></div>`;
+  $('#hp').value = HF.paket; $('#hm').value = HF.mode;
 };
-window.rebuild = run(async () => { const n = await api('rebuild'); toast(`Sheet Ranking diperbarui (${n} peserta)`); });
+window.hFilter = () => { HF.paket = $('#hp').value; HF.mode = $('#hm').value; run(views.adminHasil)(); };
+window.rebuild = run(async () => { const n = await api('rebuild'); toast('Sheet Ranking diperbarui (' + n + ' baris)'); });
+window.hapusHasil = run(async (id) => { if (!confirm('Hapus hasil ini? Peringkat akan dihitung ulang.')) return; await api('hapusHasil', { id }); toast('Hasil dihapus'); views.adminHasil(); });
 
 views.adminSetting = async () => {
   loading();
   const c = await api('config');
-  const f = (k, l) => `<div><label>${l}</label><input id="c_${k}" type="number" value="${c[k]}"></div>`;
-  $('#app').innerHTML = `<h1>Pengaturan</h1><p class="sub">Sesuaikan durasi, jumlah soal, dan passing grade dengan ketentuan terbaru.</p>
-  <div class="card"><div class="row">${f('durasi_menit', 'Durasi tryout (menit)')}${f('jumlah_twk', 'Jumlah soal TWK')}${f('jumlah_tiu', 'Jumlah soal TIU')}${f('jumlah_tkp', 'Jumlah soal TKP')}</div>
-  <div class="row">${f('pg_twk', 'Passing grade TWK')}${f('pg_tiu', 'Passing grade TIU')}${f('pg_tkp', 'Passing grade TKP')}
-  <div><label>Pendaftaran member</label><select id="c_reg"><option value="true" ${c.registrasi_terbuka ? 'selected' : ''}>Dibuka</option><option value="false" ${!c.registrasi_terbuka ? 'selected' : ''}>Ditutup</option></select></div></div>
-  <button class="btn" style="margin-top:16px" onclick="saveCfg()">Simpan Pengaturan</button></div>`;
+  const aktif = c.paket_aktif.split(',').map(Number);
+  const f = (k, l) => `<div><label for="c_${k}">${l}</label><input id="c_${k}" type="number" min="0" value="${c[k]}"></div>`;
+  $('#app').innerHTML = `<div class="page-h"><div><h1>Pengaturan</h1><p>Sesuaikan durasi, jumlah soal, dan passing grade dengan ketentuan seleksi terbaru.</p></div></div>
+  <div class="panel"><h2>Ujian</h2><div class="row">${f('durasi_menit', 'Durasi tryout (menit)')}${f('jumlah_twk', 'Jumlah soal TWK')}${f('jumlah_tiu', 'Jumlah soal TIU')}${f('jumlah_tkp', 'Jumlah soal TKP')}</div></div>
+  <div class="panel"><h2>Passing grade</h2><div class="row">${f('pg_twk', 'TWK')}${f('pg_tiu', 'TIU')}${f('pg_tkp', 'TKP')}</div></div>
+  <div class="panel"><h2>Akses</h2><label>Paket tryout yang tampil untuk peserta</label><div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:8px">${[1, 2, 3, 4, 5, 6, 7, 8].map((p) => `<label style="display:flex;gap:6px;align-items:center;font-weight:400;margin:0"><input type="checkbox" class="pa" value="${p}" ${aktif.includes(p) ? 'checked' : ''}>Paket ${p}</label>`).join('')}</div>
+  <label for="c_reg">Pendaftaran peserta baru</label><select id="c_reg" style="max-width:260px"><option value="true" ${c.registrasi_terbuka ? 'selected' : ''}>Dibuka</option><option value="false" ${!c.registrasi_terbuka ? 'selected' : ''}>Ditutup</option></select></div>
+  <button class="btn pri" onclick="saveCfg()">Simpan pengaturan</button>`;
 };
 window.saveCfg = run(async () => {
   const d = {};
-  ['durasi_menit', 'jumlah_twk', 'jumlah_tiu', 'jumlah_tkp', 'pg_twk', 'pg_tiu', 'pg_tkp'].forEach(k => d[k] = Number($('#c_' + k).value));
+  ['durasi_menit', 'jumlah_twk', 'jumlah_tiu', 'jumlah_tkp', 'pg_twk', 'pg_tiu', 'pg_tkp'].forEach((k) => { d[k] = $('#c_' + k).value; });
   d.registrasi_terbuka = $('#c_reg').value;
+  d.paket_aktif = [...document.querySelectorAll('.pa:checked')].map((e) => e.value).join(',');
   await api('setConfig', d); toast('Pengaturan disimpan');
 });
 
-/* ========= START ========= */
-window.addEventListener('beforeunload', e => { if (window.Q) { e.preventDefault(); e.returnValue = ''; } });
-(function init() {
-  if (S.token && S.user && API) { go(S.user.role === 'admin' ? 'adminHome' : 'home'); }
-  else vAuth();
+/* ========= MULAI ========= */
+(async function init() {
+  drawTop();
+  if (!(S.token && S.user && API)) return vAuth();
+  loading();
+  try { await afterLogin(); } catch (e) { logout(true); }
 })();
 </script>
 </body>
